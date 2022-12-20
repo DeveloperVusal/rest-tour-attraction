@@ -1,15 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"attrtour/routes"
 	"net/http"
 )
 
-func main() {
+func init() {
+	api := routes.Api{}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "<h1>Hello Tour Attraction application!</h1>")
+		api.Run(r)
 	})
+}
 
+func main() {
 	http.ListenAndServe(":9000", nil)
 }
