@@ -9,7 +9,7 @@ func init() {
 	api := routes.Api{}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		api.Run(r)
+		api.Run(w, r)
 	})
 }
 

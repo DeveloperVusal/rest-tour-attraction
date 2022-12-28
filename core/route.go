@@ -1,50 +1,41 @@
 package core
 
-import (
-	"fmt"
-	"net/http"
-)
-
 type Route struct {
-	Req http.Request
-}
-
-func (route *Route) IsMethod(method string) bool {
-	if route.Req.Method == method {
-		return true
-	} else {
-		return false
-	}
-}
-
-func (route *Route) IsPath(path string) bool {
-	if route.Req.URL.Path == path {
-		return true
-	} else {
-		return false
-	}
+	Routes       map[string]string
+	RoutesAction map[string]func()
 }
 
 func (route *Route) Get(path string, action func()) {
-	if route.IsPath(path) {
-		if route.IsMethod("GET") {
-			action()
-		} else {
-			fmt.Println("Неверный метод, необходимо передать GET")
-		}
-	} else {
-		fmt.Println("404 Not Found")
-	}
+	method := "GET"
+
+	route.Routes[path] = method
+	route.RoutesAction[path] = action
 }
 
 func (route *Route) Post(path string, action func()) {
-	if route.IsPath(path) {
-		if route.IsMethod("Post") {
-			action()
-		} else {
-			fmt.Println("Неверный метод, необходимо передать Post")
-		}
-	} else {
-		fmt.Println("404 Not Found")
-	}
+	method := "POST"
+
+	route.Routes[path] = method
+	route.RoutesAction[path] = action
+}
+
+func (route *Route) Put(path string, action func()) {
+	method := "PUT"
+
+	route.Routes[path] = method
+	route.RoutesAction[path] = action
+}
+
+func (route *Route) Patch(path string, action func()) {
+	method := "PATCH"
+
+	route.Routes[path] = method
+	route.RoutesAction[path] = action
+}
+
+func (route *Route) Delete(path string, action func()) {
+	method := "DELETE"
+
+	route.Routes[path] = method
+	route.RoutesAction[path] = action
 }
