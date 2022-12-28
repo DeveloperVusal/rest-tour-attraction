@@ -48,11 +48,3 @@ func (hr *HandleRouter) IsValidPath(path string) bool {
 		return false
 	}
 }
-
-// func (hr *HandleRouter) IsRoute(path string, method string) bool {
-// 	if hr.Routes[path] == method {
-// 		return true
-// 	} else {
-// 		return false
-// 	}
-// }
