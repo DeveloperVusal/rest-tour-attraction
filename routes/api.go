@@ -13,13 +13,12 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		Wri: wri,
 	}
 	route := core.Route{
-		Routes:       map[string]string{},
-		RoutesAction: map[string]func(){},
+		Routes: map[string][]interface{}{},
 	}
 
 	// User paths
 	route.Get("/api/user/get", func() {
-		wri.Write([]byte("Get user by Id=578"))
+		wri.Write([]byte("Get user by Id=985"))
 	})
 
 	route.Post("/api/user/add", func() {
@@ -31,5 +30,5 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	// Run Router Handle
-	router.TunnelControl(&route.Routes, &route.RoutesAction)
+	router.TunnelControl(&route.Routes)
 }

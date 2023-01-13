@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -9,15 +10,22 @@ type HandleRouter struct {
 	Wri http.ResponseWriter
 }
 
-func (hr *HandleRouter) TunnelControl(routes *map[string]string, actions *map[string]func()) {
+func (hr *HandleRouter) TunnelControl(routes *map[string][]interface{}) {
 	isNotFound := true
 
-	for path, method := range *routes {
+	for path, interf := range *routes {
 		if hr.IsValidPath(path) {
 			isNotFound = false
+			method := interf[0].(string)
 
 			if hr.IsMethod(method) {
-				(*actions)[path]()
+				f_ptr, ok := interf[1].(func())
+
+				if !ok {
+					panic(fmt.Sprintf("Invalid object type: expected `func()`, turned out to be `%T`", interf[1]))
+				}
+
+				f_ptr()
 				hr.Wri.WriteHeader(http.StatusOK)
 			} else {
 				hr.Wri.WriteHeader(http.StatusMethodNotAllowed)
