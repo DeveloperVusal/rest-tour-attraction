@@ -2,10 +2,15 @@ package routes
 
 import (
 	"attrtour/core"
+	"context"
+	"database/sql"
 	"net/http"
 )
 
-type Api struct{}
+type Api struct {
+	DBLink *sql.DB
+	Ctx    context.Context
+}
 
 func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	router := core.HandleRouter{
