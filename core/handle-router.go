@@ -3,6 +3,8 @@ package core
 import (
 	"fmt"
 	"net/http"
+	"regexp"
+	"strings"
 )
 
 type HandleRouter struct {
@@ -14,18 +16,26 @@ func (hr *HandleRouter) TunnelControl(routes *map[string][]interface{}) {
 	isNotFound := true
 
 	for path, interf := range *routes {
-		if hr.IsValidPath(path) {
+		hPath, paramsMap, paramsSlice := hr.HandlePath(&path)
+
+		if hr.IsValidPath(hPath, paramsSlice) {
 			isNotFound = false
 			method := interf[0].(string)
 
 			if hr.IsMethod(method) {
-				f_ptr, ok := interf[1].(func())
+				var appendArgs = map[string]interface{}{}
+
+				for key, val := range paramsMap {
+					appendArgs[key] = val
+				}
+
+				f_ptr, ok := interf[1].(func(map[string]interface{}))
 
 				if !ok {
 					panic(fmt.Sprintf("Invalid object type: expected `func()`, turned out to be `%T`", interf[1]))
 				}
 
-				f_ptr()
+				f_ptr(appendArgs)
 				hr.Wri.WriteHeader(http.StatusOK)
 			} else {
 				hr.Wri.WriteHeader(http.StatusMethodNotAllowed)
@@ -49,10 +59,56 @@ func (hr *HandleRouter) IsMethod(method string) bool {
 	}
 }
 
-func (hr *HandleRouter) IsValidPath(path string) bool {
-	if hr.Req.URL.Path == path {
+func (hr *HandleRouter) IsValidPath(path string, params []string) bool {
+	concat := ""
+
+	for _, val := range params {
+		concat = concat + "/" + val
+	}
+
+	if len(concat) > 1 {
+		if concat[0:1] == "/" {
+			concat = concat[1:]
+		}
+	}
+
+	hPath := path + concat
+
+	fmt.Println(hr.Req.URL.Path, "==", hPath)
+	fmt.Println("")
+
+	if hr.Req.URL.Path == hPath {
 		return true
 	} else {
 		return false
 	}
+}
+
+func (hr *HandleRouter) HandlePath(path *string) (string, map[string]string, []string) {
+	var params map[int]string = map[int]string{}
+	var paramsSlice []string
+	var paramsMap map[string]string = map[string]string{}
+	var pathBuild []string
+
+	sections1 := strings.Split(hr.Req.URL.Path, "/")
+
+	for indx, item := range sections1 {
+		params[indx] = item
+	}
+
+	sections2 := strings.Split(*path, "/")
+	r, _ := regexp.Compile("^{.*}$")
+
+	for indx, item := range sections2 {
+		if r.MatchString(item) {
+			item = item[:len(item)-1]
+			item = item[1:]
+			paramsMap[item] = params[indx]
+			paramsSlice = append(paramsSlice, params[indx])
+		} else {
+			pathBuild = append(pathBuild, item)
+		}
+	}
+
+	return strings.Join(pathBuild, "/"), paramsMap, paramsSlice
 }
