@@ -8,7 +8,7 @@ import (
 )
 
 type HandleRouter struct {
-	Req http.Request
+	Req *http.Request
 	Wri http.ResponseWriter
 }
 
@@ -73,9 +73,6 @@ func (hr *HandleRouter) IsValidPath(path string, params []string) bool {
 	}
 
 	hPath := path + concat
-
-	fmt.Println(hr.Req.URL.Path, "==", hPath)
-	fmt.Println("")
 
 	if hr.Req.URL.Path == hPath {
 		return true

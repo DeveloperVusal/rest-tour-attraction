@@ -1,11 +1,14 @@
 package routes
 
 import (
-	"attrtour/core"
 	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
+
+	"attrtour/app/controllers"
+	"attrtour/core"
 )
 
 type Api struct {
@@ -15,7 +18,7 @@ type Api struct {
 
 func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	router := core.HandleRouter{
-		Req: *req,
+		Req: req,
 		Wri: wri,
 	}
 	route := core.Route{
@@ -23,9 +26,14 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	}
 
 	// User paths
-	route.Get("/api/user/get/{section}/{id}/", func(args map[string]interface{}) {
-		wri.Write([]byte("Get user section=" + fmt.Sprintf("%v", args["section"]) + "\n"))
-		wri.Write([]byte("Get user by Id=" + fmt.Sprintf("%v", args["id"]) + "\n"))
+	route.Get("/api/user/get/{id}/", func(args map[string]interface{}) {
+		uc := &controllers.UserController{
+			Req: req,
+			Wri: wri,
+		}
+		id, _ := strconv.Atoi(fmt.Sprintf("%v", args["id"]))
+
+		uc.Get(id)
 	})
 
 	route.Post("/api/user/add", func(args map[string]interface{}) {
