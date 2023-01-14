@@ -33,6 +33,7 @@ func (hr *HandleRouter) TunnelControl(routes *map[string][]interface{}) {
 
 				if !ok {
 					hr.Wri.WriteHeader(http.StatusInternalServerError)
+					hr.Wri.Write([]byte("Internal Server Error\n"))
 					panic(fmt.Sprintf("Invalid object type: expected `func()`, turned out to be `%T`", interf[1]))
 				}
 
@@ -99,6 +100,7 @@ func (hr *HandleRouter) HandlePath(path *string) (string, map[string]string, []s
 
 	if err != nil {
 		hr.Wri.WriteHeader(http.StatusInternalServerError)
+		hr.Wri.Write([]byte("Internal Server Error\n"))
 		panic(err)
 	}
 
