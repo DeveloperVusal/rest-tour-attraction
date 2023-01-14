@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strconv"
 
 	"attrtour/app/controllers"
@@ -31,13 +32,25 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 			Req: req,
 			Wri: wri,
 		}
-		id, _ := strconv.Atoi(fmt.Sprintf("%v", args["id"]))
 
-		uc.Get(id)
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			uc.Get(id)
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
 	})
 
 	route.Post("/api/user/add", func(args map[string]interface{}) {
-		wri.Write([]byte("Add new user"))
+		uc := &controllers.UserController{
+			Req: req,
+			Wri: wri,
+		}
+
+		uc.Add()
 	})
 
 	route.Post("/api/place/add", func(args map[string]interface{}) {
