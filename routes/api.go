@@ -45,12 +45,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	route.Post("/api/user/add", func(args map[string]interface{}) {
-		uc := &controllers.UserController{
-			Req: req,
-			Wri: wri,
-		}
-
-		uc.Add()
+		wri.Write([]byte("Add new user"))
 	})
 
 	route.Post("/api/place/add", func(args map[string]interface{}) {
