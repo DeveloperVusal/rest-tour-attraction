@@ -32,6 +32,7 @@ func (hr *HandleRouter) TunnelControl(routes *map[string][]interface{}) {
 				f_ptr, ok := interf[1].(func(map[string]interface{}))
 
 				if !ok {
+					hr.Wri.WriteHeader(http.StatusInternalServerError)
 					panic(fmt.Sprintf("Invalid object type: expected `func()`, turned out to be `%T`", interf[1]))
 				}
 
@@ -94,7 +95,12 @@ func (hr *HandleRouter) HandlePath(path *string) (string, map[string]string, []s
 	}
 
 	sections2 := strings.Split(*path, "/")
-	r, _ := regexp.Compile("^{.*}$")
+	r, err := regexp.Compile("^{.*}$")
+
+	if err != nil {
+		hr.Wri.WriteHeader(http.StatusInternalServerError)
+		panic(err)
+	}
 
 	for indx, item := range sections2 {
 		if r.MatchString(item) {
