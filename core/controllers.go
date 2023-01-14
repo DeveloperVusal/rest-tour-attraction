@@ -1,8 +1,14 @@
 package core
 
-import "net/http"
+import (
+	"context"
+	"database/sql"
+	"net/http"
+)
 
 type BaseController struct {
-	Req *http.Request
-	Wri http.ResponseWriter
+	DBLink *sql.DB
+	Ctx    context.Context
+	Req    *http.Request
+	Wri    http.ResponseWriter
 }

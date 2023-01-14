@@ -1,20 +1,27 @@
 package core
 
 import (
-	"fmt"
+	"context"
+	"database/sql"
 	"net/http"
 )
 
-type BaseModel struct {
-	Req *http.Request
-	Wri http.ResponseWriter
+type InterfaceModel interface {
+	Save(...any)
+	Create(...any)
 }
 
-func (bm *BaseModel) RequestInit(wri http.ResponseWriter, req *http.Request) {
+type BaseModel struct {
+	DBLink *sql.DB
+	Ctx    context.Context
+	Req    *http.Request
+	Wri    http.ResponseWriter
+	InterfaceModel
+}
+
+func (bm *BaseModel) RequestInit(db *sql.DB, ctx context.Context, wri http.ResponseWriter, req *http.Request) {
 	bm.Req = req
 	bm.Wri = wri
-}
-
-func (bm *BaseModel) Save(a ...any) {
-	fmt.Println(a...)
+	bm.DBLink = db
+	bm.Ctx = ctx
 }

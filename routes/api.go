@@ -29,8 +29,10 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	// User paths
 	route.Get("/api/user/get/{id}/", func(args map[string]interface{}) {
 		uc := &controllers.UserController{
-			Req: req,
-			Wri: wri,
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+			Ctx:    api.Ctx,
 		}
 
 		idStr := fmt.Sprintf("%v", args["id"])
@@ -45,7 +47,25 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	route.Post("/api/user/add", func(args map[string]interface{}) {
-		wri.Write([]byte("Add new user"))
+		uc := &controllers.UserController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+			Ctx:    api.Ctx,
+		}
+
+		uc.Add()
+	})
+
+	route.Put("/api/user/save", func(args map[string]interface{}) {
+		uc := &controllers.UserController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+			Ctx:    api.Ctx,
+		}
+
+		uc.Save()
 	})
 
 	route.Post("/api/place/add", func(args map[string]interface{}) {
