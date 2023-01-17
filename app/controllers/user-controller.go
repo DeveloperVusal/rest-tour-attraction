@@ -5,7 +5,7 @@ import (
 	"io"
 
 	"attrtour/app/http/dto"
-	"attrtour/app/models"
+	"attrtour/app/services"
 	"attrtour/core"
 )
 
@@ -16,10 +16,10 @@ func (uc *UserController) Add() {
 	dtoData := dto.AddUserDto{}
 	_ = json.Unmarshal(b, &dtoData)
 
-	um := models.UserModel{}
-	um.RequestInit(uc.DBLink, uc.Ctx, uc.Wri, uc.Req)
+	us := services.UserService{}
+	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
 
-	um.Create(dtoData)
+	us.Create(dtoData)
 }
 
 func (uc *UserController) Save() {
@@ -27,19 +27,19 @@ func (uc *UserController) Save() {
 	dtoData := dto.SaveUserDto{}
 	_ = json.Unmarshal(b, &dtoData)
 
-	um := models.UserModel{}
-	um.RequestInit(uc.DBLink, uc.Ctx, uc.Wri, uc.Req)
+	us := services.UserService{}
+	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
 
-	um.Save(dtoData)
+	us.Save(dtoData)
 }
 
-func (uc *UserController) Get(id int) {
-	um := models.UserModel{
+func (uc *UserController) Get(id uint) {
+	us := services.UserService{
 		GetDto: dto.GetUserDto{
 			Id: id,
 		},
 	}
-	um.RequestInit(uc.DBLink, uc.Ctx, uc.Wri, uc.Req)
+	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
 
-	um.GetId()
+	us.GetById()
 }

@@ -1,9 +1,9 @@
 package core
 
 import (
-	"context"
-	"database/sql"
 	"net/http"
+
+	"gorm.io/gorm"
 )
 
 type InterfaceModel interface {
@@ -12,16 +12,8 @@ type InterfaceModel interface {
 }
 
 type BaseModel struct {
-	DBLink *sql.DB
-	Ctx    context.Context
+	DBLink *gorm.DB
 	Req    *http.Request
 	Wri    http.ResponseWriter
 	InterfaceModel
-}
-
-func (bm *BaseModel) RequestInit(db *sql.DB, ctx context.Context, wri http.ResponseWriter, req *http.Request) {
-	bm.Req = req
-	bm.Wri = wri
-	bm.DBLink = db
-	bm.Ctx = ctx
 }

@@ -1,7 +1,9 @@
 package dto
 
 import (
-	"github.com/go-playground/validator"
+	"fmt"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type DtoValidate struct{}
@@ -15,20 +17,20 @@ func (dtoeq *DtoValidate) Is(d any) bool {
 
 	if err != nil {
 		if _, ok := err.(*validator.InvalidValidationError); ok {
-			// fmt.Println(err)
+			fmt.Println(err)
 			isValidate = false
 		}
 
-		// fmt.Println("------ List of tag fields with error ---------")
+		fmt.Println("------ List of tag fields with error ---------")
 
-		// for _, err := range err.(validator.ValidationErrors) {
-		// 	fmt.Println(err.StructField())
-		// 	fmt.Println(err.ActualTag())
-		// 	fmt.Println(err.Kind())
-		// 	fmt.Println(err.Value())
-		// 	fmt.Println(err.Param())
-		// 	fmt.Println("---------------")
-		// }
+		for _, err := range err.(validator.ValidationErrors) {
+			fmt.Println(err.StructField())
+			fmt.Println(err.ActualTag())
+			fmt.Println(err.Kind())
+			fmt.Println(err.Value())
+			fmt.Println(err.Param())
+			fmt.Println("---------------")
+		}
 
 		isValidate = false
 	}

@@ -1,14 +1,13 @@
 package core
 
 import (
-	"context"
-	"database/sql"
 	"net/http"
+
+	"gorm.io/gorm"
 )
 
 type BaseController struct {
-	DBLink *sql.DB
-	Ctx    context.Context
+	DBLink *gorm.DB
 	Req    *http.Request
 	Wri    http.ResponseWriter
 }

@@ -1,7 +1,6 @@
 package database
 
 import (
-	"context"
 	"database/sql"
 
 	"attrtour/config"
@@ -12,19 +11,19 @@ import (
 type SQL struct{}
 
 // Метод подключения к БД MySQL
-func (_sql *SQL) ConnMySQL(serverName string) (context.Context, *sql.DB, error) {
+func (_sql *SQL) ConnMySQL() (*sql.DB, error) {
 	loadCfg := &config.DatabaseConfig{}
 	cfg := loadCfg.ConfigLoad()
 
 	var dataSourceName string = ""
 
-	dataSourceName = cfg["username"] + ":" + cfg["password"] + "@tcp(" + cfg["host"] + ":" + cfg["port"] + ")/" + cfg["dbname"]
+	dataSourceName = cfg["username"] + ":" + cfg["password"] + "@tcp(" + cfg["host"] + ":" + cfg["port"] + ")/" + cfg["dbname"] + "?parseTime=true"
 
 	_db, err := _sql.DriverMySQL(&dataSourceName)
 
-	_db.SetMaxOpenConns(30)
+	_db.SetMaxOpenConns(100)
 
-	return context.Background(), _db, err
+	return _db, err
 }
 
 // Вызов драйвера mysql

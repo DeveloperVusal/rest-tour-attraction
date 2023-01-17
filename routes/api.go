@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"context"
-	"database/sql"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -10,11 +8,12 @@ import (
 
 	"attrtour/app/controllers"
 	"attrtour/core"
+
+	"gorm.io/gorm"
 )
 
 type Api struct {
-	DBLink *sql.DB
-	Ctx    context.Context
+	DBLink *gorm.DB
 }
 
 func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
@@ -32,7 +31,6 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 			Req:    req,
 			Wri:    wri,
 			DBLink: api.DBLink,
-			Ctx:    api.Ctx,
 		}
 
 		idStr := fmt.Sprintf("%v", args["id"])
@@ -40,7 +38,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 
 		if match {
 			id, _ := strconv.Atoi(idStr)
-			uc.Get(id)
+			uc.Get(uint(id))
 		} else {
 			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
 		}
@@ -51,7 +49,6 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 			Req:    req,
 			Wri:    wri,
 			DBLink: api.DBLink,
-			Ctx:    api.Ctx,
 		}
 
 		uc.Add()
@@ -62,14 +59,47 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 			Req:    req,
 			Wri:    wri,
 			DBLink: api.DBLink,
-			Ctx:    api.Ctx,
 		}
 
 		uc.Save()
 	})
 
-	route.Post("/api/place/add", func(args map[string]interface{}) {
-		wri.Write([]byte("Add new place"))
+	route.Get("/api/group/get/{id}/", func(args map[string]interface{}) {
+		gc := &controllers.GroupController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			gc.Get(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
+	route.Post("/api/group/add", func(args map[string]interface{}) {
+		gc := &controllers.GroupController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		gc.Add()
+	})
+
+	route.Put("/api/group/save", func(args map[string]interface{}) {
+		gc := &controllers.GroupController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		gc.Save()
 	})
 
 	// Run Router Handle
