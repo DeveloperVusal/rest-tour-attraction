@@ -43,3 +43,14 @@ func (gc *GroupController) Get(id uint) {
 
 	gs.GetById()
 }
+
+func (gc *GroupController) Delete(id uint) {
+	gs := services.GroupService{
+		GetDto: dto.GetUserDto{
+			Id: id,
+		},
+	}
+	gs.RequestInit(gc.DBLink, gc.Wri, gc.Req)
+
+	gs.Delete()
+}

@@ -126,7 +126,10 @@ func (us *UserService) Save(_dto dto.SaveUserDto) {
 		us.DBLink.Save(&user)
 
 		jsonData, _ := json.Marshal(map[string]interface{}{
-			"user_id": user.Id,
+			"status": "success",
+			"result": map[string]interface{}{
+				"user_id": user.Id,
+			},
 		})
 
 		us.Wri.Write(jsonData)
@@ -141,6 +144,19 @@ func (us *UserService) GetById() {
 	us.DBLink.First(&user, us.GetDto.Id)
 
 	jsonData, _ := json.Marshal(user)
+
+	us.Wri.Write(jsonData)
+}
+
+func (us *UserService) Delete() {
+	var user models.User
+
+	us.DBLink.First(&user, us.GetDto.Id)
+	us.DBLink.Delete(&user)
+
+	jsonData, _ := json.Marshal(map[string]interface{}{
+		"status": "success",
+	})
 
 	us.Wri.Write(jsonData)
 }

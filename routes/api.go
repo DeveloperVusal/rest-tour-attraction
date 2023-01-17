@@ -44,6 +44,24 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 	})
 
+	route.Delete("/api/user/delete/{id}/", func(args map[string]interface{}) {
+		uc := &controllers.UserController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			uc.Delete(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
 	route.Post("/api/user/add", func(args map[string]interface{}) {
 		uc := &controllers.UserController{
 			Req:    req,
@@ -63,6 +81,8 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 
 		uc.Save()
 	})
+
+	/* ================================= */
 
 	route.Get("/api/group/get/{id}/", func(args map[string]interface{}) {
 		gc := &controllers.GroupController{
@@ -100,6 +120,24 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 
 		gc.Save()
+	})
+
+	route.Delete("/api/group/delete/{id}/", func(args map[string]interface{}) {
+		gc := &controllers.GroupController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			gc.Delete(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
 	})
 
 	// Run Router Handle

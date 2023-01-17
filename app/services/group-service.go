@@ -89,3 +89,16 @@ func (gs *GroupService) GetById() {
 
 	gs.Wri.Write(jsonData)
 }
+
+func (gs *GroupService) Delete() {
+	var group models.Group
+
+	gs.DBLink.First(&group, gs.GetDto.Id)
+	gs.DBLink.Delete(&group)
+
+	jsonData, _ := json.Marshal(map[string]interface{}{
+		"status": "success",
+	})
+
+	gs.Wri.Write(jsonData)
+}

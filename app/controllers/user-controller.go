@@ -43,3 +43,14 @@ func (uc *UserController) Get(id uint) {
 
 	us.GetById()
 }
+
+func (uc *UserController) Delete(id uint) {
+	us := services.UserService{
+		GetDto: dto.GetUserDto{
+			Id: id,
+		},
+	}
+	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
+
+	us.Delete()
+}
