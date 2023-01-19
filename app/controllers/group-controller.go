@@ -11,6 +11,24 @@ import (
 
 type GroupController core.BaseController
 
+func (gc *GroupController) Get() {
+	gs := services.GroupService{}
+	gs.RequestInit(gc.DBLink, gc.Wri, gc.Req)
+
+	gs.GetAll()
+}
+
+func (gc *GroupController) GetById(id uint) {
+	gs := services.GroupService{
+		GetDto: dto.GetGroupDto{
+			Id: id,
+		},
+	}
+	gs.RequestInit(gc.DBLink, gc.Wri, gc.Req)
+
+	gs.GetById()
+}
+
 func (gc *GroupController) Add() {
 	b, _ := io.ReadAll(gc.Req.Body)
 	dtoData := dto.AddGroupDto{}
@@ -33,20 +51,9 @@ func (gc *GroupController) Save() {
 	gs.Save(dtoData)
 }
 
-func (gc *GroupController) Get(id uint) {
-	gs := services.GroupService{
-		GetDto: dto.GetUserDto{
-			Id: id,
-		},
-	}
-	gs.RequestInit(gc.DBLink, gc.Wri, gc.Req)
-
-	gs.GetById()
-}
-
 func (gc *GroupController) Delete(id uint) {
 	gs := services.GroupService{
-		GetDto: dto.GetUserDto{
+		GetDto: dto.GetGroupDto{
 			Id: id,
 		},
 	}

@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
@@ -10,7 +11,27 @@ import (
 
 type GroupService struct {
 	core.BaseService
-	GetDto dto.GetUserDto
+	GetDto dto.GetGroupDto
+}
+
+func (gs *GroupService) GetAll() {
+	var group []models.Group
+
+	gs.DBLink.Find(&group)
+
+	jsonData, _ := json.Marshal(group)
+
+	gs.Wri.Write(jsonData)
+}
+
+func (gs *GroupService) GetById() {
+	var group models.Group
+
+	gs.DBLink.First(&group, gs.GetDto.Id)
+
+	jsonData, _ := json.Marshal(group)
+
+	gs.Wri.Write(jsonData)
 }
 
 func (gs *GroupService) Create(_dto dto.AddGroupDto) {
@@ -34,6 +55,7 @@ func (gs *GroupService) Create(_dto dto.AddGroupDto) {
 			"group_id": group.Id,
 		})
 
+		gs.Wri.WriteHeader(http.StatusCreated)
 		gs.Wri.Write(jsonData)
 	} else {
 		gs.Wri.Write([]byte("Fields sent incorrectly\n"))
@@ -78,16 +100,6 @@ func (gs *GroupService) Save(_dto dto.SaveGroupDto) {
 	} else {
 		gs.Wri.Write([]byte("Fields sent incorrectly\n"))
 	}
-}
-
-func (gs *GroupService) GetById() {
-	var group models.Group
-
-	gs.DBLink.First(&group, gs.GetDto.Id)
-
-	jsonData, _ := json.Marshal(group)
-
-	gs.Wri.Write(jsonData)
 }
 
 func (gs *GroupService) Delete() {

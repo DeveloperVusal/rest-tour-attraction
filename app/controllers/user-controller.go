@@ -11,6 +11,24 @@ import (
 
 type UserController core.BaseController
 
+func (uc *UserController) Get() {
+	us := services.UserService{}
+	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
+
+	us.GetAll()
+}
+
+func (uc *UserController) GetById(id uint) {
+	us := services.UserService{
+		GetDto: dto.GetUserDto{
+			Id: id,
+		},
+	}
+	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
+
+	us.GetById()
+}
+
 func (uc *UserController) Add() {
 	b, _ := io.ReadAll(uc.Req.Body)
 	dtoData := dto.AddUserDto{}
@@ -31,17 +49,6 @@ func (uc *UserController) Save() {
 	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
 
 	us.Save(dtoData)
-}
-
-func (uc *UserController) Get(id uint) {
-	us := services.UserService{
-		GetDto: dto.GetUserDto{
-			Id: id,
-		},
-	}
-	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
-
-	us.GetById()
 }
 
 func (uc *UserController) Delete(id uint) {

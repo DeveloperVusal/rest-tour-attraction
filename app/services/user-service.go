@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
@@ -11,6 +12,26 @@ import (
 type UserService struct {
 	core.BaseService
 	GetDto dto.GetUserDto
+}
+
+func (us *UserService) GetAll() {
+	var user []models.User
+
+	us.DBLink.Preload("Group").Find(&user)
+
+	jsonData, _ := json.Marshal(user)
+
+	us.Wri.Write(jsonData)
+}
+
+func (us *UserService) GetById() {
+	var user models.User
+
+	us.DBLink.Preload("Group").First(&user, us.GetDto.Id)
+
+	jsonData, _ := json.Marshal(user)
+
+	us.Wri.Write(jsonData)
 }
 
 func (us *UserService) Create(_dto dto.AddUserDto) {
@@ -57,6 +78,7 @@ func (us *UserService) Create(_dto dto.AddUserDto) {
 			"user_id": user.Id,
 		})
 
+		us.Wri.WriteHeader(http.StatusCreated)
 		us.Wri.Write(jsonData)
 	} else {
 		us.Wri.Write([]byte("Fields sent incorrectly\n"))
@@ -136,16 +158,6 @@ func (us *UserService) Save(_dto dto.SaveUserDto) {
 	} else {
 		us.Wri.Write([]byte("Fields sent incorrectly\n"))
 	}
-}
-
-func (us *UserService) GetById() {
-	var user models.User
-
-	us.DBLink.First(&user, us.GetDto.Id)
-
-	jsonData, _ := json.Marshal(user)
-
-	us.Wri.Write(jsonData)
 }
 
 func (us *UserService) Delete() {

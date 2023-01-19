@@ -25,7 +25,84 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		Routes: map[string][]interface{}{},
 	}
 
+	// Group paths
+	route.Get("/api/group/get", func(args map[string]interface{}) {
+		gc := &controllers.GroupController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		gc.Get()
+	})
+
+	route.Get("/api/group/get/{id}/", func(args map[string]interface{}) {
+		gc := &controllers.GroupController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			gc.GetById(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
+	route.Post("/api/group/add", func(args map[string]interface{}) {
+		gc := &controllers.GroupController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		gc.Add()
+	})
+
+	route.Put("/api/group/save", func(args map[string]interface{}) {
+		gc := &controllers.GroupController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		gc.Save()
+	})
+
+	route.Delete("/api/group/delete/{id}/", func(args map[string]interface{}) {
+		gc := &controllers.GroupController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			gc.Delete(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
 	// User paths
+	route.Get("/api/user/get", func(args map[string]interface{}) {
+		uc := &controllers.UserController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		uc.Get()
+	})
+
 	route.Get("/api/user/get/{id}/", func(args map[string]interface{}) {
 		uc := &controllers.UserController{
 			Req:    req,
@@ -38,7 +115,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 
 		if match {
 			id, _ := strconv.Atoi(idStr)
-			uc.Get(uint(id))
+			uc.GetById(uint(id))
 		} else {
 			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
 		}
@@ -82,10 +159,19 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		uc.Save()
 	})
 
-	/* ================================= */
+	// Language paths
+	route.Get("/api/language/get", func(args map[string]interface{}) {
+		lc := &controllers.LanguageController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
 
-	route.Get("/api/group/get/{id}/", func(args map[string]interface{}) {
-		gc := &controllers.GroupController{
+		lc.Get()
+	})
+
+	route.Get("/api/language/get/{id}/", func(args map[string]interface{}) {
+		lc := &controllers.LanguageController{
 			Req:    req,
 			Wri:    wri,
 			DBLink: api.DBLink,
@@ -96,14 +182,81 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 
 		if match {
 			id, _ := strconv.Atoi(idStr)
-			gc.Get(uint(id))
+			lc.GetById(uint(id))
 		} else {
 			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
 		}
 	})
 
-	route.Post("/api/group/add", func(args map[string]interface{}) {
-		gc := &controllers.GroupController{
+	route.Post("/api/language/add", func(args map[string]interface{}) {
+		lc := &controllers.LanguageController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		lc.Add()
+	})
+
+	route.Put("/api/language/save", func(args map[string]interface{}) {
+		lc := &controllers.LanguageController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		lc.Save()
+	})
+
+	route.Delete("/api/language/delete/{id}/", func(args map[string]interface{}) {
+		lc := &controllers.LanguageController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			lc.Delete(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
+	// Continent paths
+	route.Get("/api/continent/get", func(args map[string]interface{}) {
+		gc := &controllers.ContinentController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		gc.Get()
+	})
+
+	route.Get("/api/continent/get/{id}/", func(args map[string]interface{}) {
+		gc := &controllers.ContinentController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			gc.GetById(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
+	route.Post("/api/continent/add", func(args map[string]interface{}) {
+		gc := &controllers.ContinentController{
 			Req:    req,
 			Wri:    wri,
 			DBLink: api.DBLink,
@@ -112,8 +265,8 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Add()
 	})
 
-	route.Put("/api/group/save", func(args map[string]interface{}) {
-		gc := &controllers.GroupController{
+	route.Put("/api/continent/save", func(args map[string]interface{}) {
+		gc := &controllers.ContinentController{
 			Req:    req,
 			Wri:    wri,
 			DBLink: api.DBLink,
@@ -122,8 +275,8 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Save()
 	})
 
-	route.Delete("/api/group/delete/{id}/", func(args map[string]interface{}) {
-		gc := &controllers.GroupController{
+	route.Delete("/api/continent/delete/{id}/", func(args map[string]interface{}) {
+		gc := &controllers.ContinentController{
 			Req:    req,
 			Wri:    wri,
 			DBLink: api.DBLink,
@@ -139,6 +292,75 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
 		}
 	})
+
+	// Country paths
+	route.Get("/api/country/get", func(args map[string]interface{}) {
+		cc := &controllers.CountryController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		cc.Get()
+	})
+
+	route.Get("/api/country/get/{id}/", func(args map[string]interface{}) {
+		cc := &controllers.CountryController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			cc.GetById(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
+	route.Post("/api/country/add", func(args map[string]interface{}) {
+		cc := &controllers.CountryController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		cc.Add()
+	})
+
+	route.Put("/api/country/save", func(args map[string]interface{}) {
+		cc := &controllers.CountryController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		cc.Save()
+	})
+
+	route.Delete("/api/country/delete/{id}/", func(args map[string]interface{}) {
+		cc := &controllers.CountryController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			cc.Delete(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
+	/*==========================*/
 
 	// Run Router Handle
 	router.TunnelControl(&route.Routes)
