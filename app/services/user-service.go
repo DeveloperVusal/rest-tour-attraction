@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
 	"attrtour/core"
@@ -38,10 +40,12 @@ func (us *UserService) Create(_dto dto.AddUserDto) {
 	validate := dto.DtoValidate{}
 
 	if validate.Is(_dto) {
+		hasPasswd, _ := us.HashPassword(_dto.Password)
+
 		user := models.User{
 			GroupId:   _dto.GroupId,
 			Username:  _dto.Username,
-			Password:  _dto.Password,
+			Password:  hasPasswd,
 			IsConfirm: &_dto.IsConfirm,
 			IsArchive: &_dto.IsArchive,
 			IsBlocked: &_dto.IsBlocked,
@@ -101,8 +105,11 @@ func (us *UserService) Save(_dto dto.SaveUserDto) {
 			user.Username = _dto.Username
 		}
 
-		if len(_dto.Password) > 0 && _dto.Password != user.Password {
-			user.Password = _dto.Password
+		if len(_dto.Password) > 0 {
+			if !us.CheckPasswordHash(_dto.Password, user.Password) {
+				hasPasswd, _ := us.HashPassword(_dto.Password)
+				user.Password = hasPasswd
+			}
 		}
 
 		if len(_dto.Email) > 0 && _dto.Email != user.Email {
@@ -171,4 +178,14 @@ func (us *UserService) Delete() {
 	})
 
 	us.Wri.Write(jsonData)
+}
+
+func (us *UserService) HashPassword(passwd string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(passwd), 14)
+	return string(bytes), err
+}
+
+func (us *UserService) CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
