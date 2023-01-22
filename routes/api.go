@@ -64,7 +64,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Add()
 	})
 
-	route.Put("/api/group/save", func(args map[string]interface{}) {
+	route.Patch("/api/group/save", func(args map[string]interface{}) {
 		gc := &controllers.GroupController{
 			Req:    req,
 			Wri:    wri,
@@ -149,7 +149,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		uc.Add()
 	})
 
-	route.Put("/api/user/save", func(args map[string]interface{}) {
+	route.Patch("/api/user/save", func(args map[string]interface{}) {
 		uc := &controllers.UserController{
 			Req:    req,
 			Wri:    wri,
@@ -198,7 +198,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		lc.Add()
 	})
 
-	route.Put("/api/language/save", func(args map[string]interface{}) {
+	route.Patch("/api/language/save", func(args map[string]interface{}) {
 		lc := &controllers.LanguageController{
 			Req:    req,
 			Wri:    wri,
@@ -265,7 +265,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Add()
 	})
 
-	route.Put("/api/continent/save", func(args map[string]interface{}) {
+	route.Patch("/api/continent/save", func(args map[string]interface{}) {
 		gc := &controllers.ContinentController{
 			Req:    req,
 			Wri:    wri,
@@ -332,7 +332,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		cc.Add()
 	})
 
-	route.Put("/api/country/save", func(args map[string]interface{}) {
+	route.Patch("/api/country/save", func(args map[string]interface{}) {
 		cc := &controllers.CountryController{
 			Req:    req,
 			Wri:    wri,
@@ -355,6 +355,112 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		if match {
 			id, _ := strconv.Atoi(idStr)
 			cc.Delete(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
+	// Location paths
+	route.Get("/api/location/get", func(args map[string]interface{}) {
+		lc := &controllers.LocationController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		lc.Get()
+	})
+
+	route.Get("/api/location/get/{id}/", func(args map[string]interface{}) {
+		lc := &controllers.LocationController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			lc.GetById(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
+	route.Post("/api/location/add", func(args map[string]interface{}) {
+		lc := &controllers.LocationController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		lc.Add()
+	})
+
+	route.Patch("/api/location/save", func(args map[string]interface{}) {
+		lc := &controllers.LocationController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		lc.Save()
+	})
+
+	route.Delete("/api/location/delete/{id}/", func(args map[string]interface{}) {
+		lc := &controllers.LocationController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			lc.Delete(uint(id))
+		} else {
+			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
+		}
+	})
+
+	// Upload paths
+	route.Post("/api/main-image/upload", func(args map[string]interface{}) {
+		mic := &controllers.MainImageController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		mic.Upload()
+	})
+
+	route.Patch("/api/main-image/save", func(args map[string]interface{}) {
+		mic := &controllers.MainImageController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		mic.Save()
+	})
+
+	route.Delete("/api/main-image/remove/{id}/", func(args map[string]interface{}) {
+		mic := &controllers.MainImageController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		idStr := fmt.Sprintf("%v", args["id"])
+		match, _ := regexp.MatchString("[0-9]", idStr)
+
+		if match {
+			id, _ := strconv.Atoi(idStr)
+			mic.Remove(uint(id))
 		} else {
 			wri.Write([]byte(fmt.Sprintf("Invalid object type: expected `int`, turned out to be `%T`", args["id"])))
 		}

@@ -8,6 +8,8 @@ type Location struct {
 	Language    Language
 	UserId      uint
 	User        User
+	CountryId   uint
+	Country     Country
 	Name        string    `gorm:"type:VARCHAR(255);not null;index:,class:FULLTEXT"`
 	City        string    `gorm:"type:VARCHAR(150);not null;index:,class:FULLTEXT"`
 	Description string    `gorm:"type:TEXT;default:null"`
