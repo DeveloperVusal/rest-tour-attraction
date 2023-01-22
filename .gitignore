@@ -1,5 +1,5 @@
 .env
 /.idea
 /.vscode
-tags-main.go
-queries.sql
+
+/storage
