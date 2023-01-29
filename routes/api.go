@@ -468,6 +468,17 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 
 	/*==========================*/
 
+	//Auth
+	route.Post("/api/auth", func(args map[string]interface{}) {
+		ac := &controllers.AuthController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		ac.Login()
+	})
+
 	// Run Router Handle
 	router.TunnelControl(&route.Routes)
 }
