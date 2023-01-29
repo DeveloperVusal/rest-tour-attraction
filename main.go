@@ -1,7 +1,7 @@
 package main
 
 import (
-	"context"
+	// "context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -11,12 +11,15 @@ import (
 
 	"attrtour/app/combines"
 
+	"github.com/rs/cors"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var dbn *sql.DB
-var ctx context.Context
+
+var mux *http.ServeMux
+var httpCors *cors.Cors
 
 func init() {
 	var err error
@@ -45,11 +48,23 @@ func init() {
 		DBLink: gormDB,
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux = http.NewServeMux()
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		api.Run(w, r)
+	})
+
+	httpCors = cors.New(cors.Options{
+		AllowedOrigins:   []string{"*", "http://localhost:5173"},
+		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPatch, http.MethodPut},
+		AllowCredentials: true,
+		// Enable Debugging for testing, consider disabling in production
+		Debug: true,
 	})
 }
 
 func main() {
-	http.ListenAndServe(":9000", nil)
+
+	handler := httpCors.Handler(mux)
+	http.ListenAndServe(":9000", handler)
 }
