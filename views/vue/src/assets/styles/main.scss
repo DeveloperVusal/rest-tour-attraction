@@ -1,0 +1,19 @@
+@import './bootsrap-edit.scss';
+
+$fontFamilyDefault: 'FiraSans-Regular';
+$fontColorDefault: #333;
+$backgroundColorDefault: #f7f7f7;
+
+body {
+    padding: 0px;
+    margin: 0px;
+    background-color: $backgroundColorDefault;
+    font-family: $fontFamilyDefault;
+    color: $fontColorDefault;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  font-weight: normal;
+}
