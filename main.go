@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"attrtour/core"
 	"attrtour/database"
 	"attrtour/routes"
 
@@ -22,6 +23,9 @@ var mux *http.ServeMux
 var httpCors *cors.Cors
 
 func init() {
+	env := core.Helpers{}
+	env.LoadEnv()
+
 	var err error
 
 	db := database.SQL{}
