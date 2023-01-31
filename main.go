@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -59,8 +58,9 @@ func init() {
 	})
 
 	httpCors = cors.New(cors.Options{
-		AllowedOrigins:   []string{"*", "http://localhost:5173"},
-		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPatch, http.MethodPut},
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Accept-Language", "Content-Type"},
 		AllowCredentials: true,
 		// Enable Debugging for testing, consider disabling in production
 		Debug: true,
@@ -68,7 +68,6 @@ func init() {
 }
 
 func main() {
-
 	handler := httpCors.Handler(mux)
 	http.ListenAndServe(":9000", handler)
 }
