@@ -40,12 +40,12 @@ func (us *UserService) Create(_dto dto.AddUserDto) {
 	validate := dto.DtoValidate{}
 
 	if validate.Is(_dto) {
-		hasPasswd, _ := us.HashPassword(_dto.Password)
+		hashPasswd, _ := us.HashPassword(_dto.Password)
 
 		user := models.User{
 			GroupId:   _dto.GroupId,
 			Username:  _dto.Username,
-			Password:  hasPasswd,
+			Password:  hashPasswd,
 			IsConfirm: &_dto.IsConfirm,
 			IsArchive: &_dto.IsArchive,
 			IsBlocked: &_dto.IsBlocked,
@@ -107,8 +107,8 @@ func (us *UserService) Save(_dto dto.SaveUserDto) {
 
 		if len(_dto.Password) > 0 {
 			if !us.CheckPasswordHash(_dto.Password, user.Password) {
-				hasPasswd, _ := us.HashPassword(_dto.Password)
-				user.Password = hasPasswd
+				hashPasswd, _ := us.HashPassword(_dto.Password)
+				user.Password = hashPasswd
 			}
 		}
 
