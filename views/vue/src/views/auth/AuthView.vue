@@ -24,7 +24,8 @@ export default {
             bodyData: {
                 username: '',
                 passwd: ''
-            }
+            },
+            warnings: []
         }
     },
     methods: {
@@ -32,6 +33,7 @@ export default {
             if (!this.bodyData.username.length || !this.bodyData.passwd.length) return false
 
             this.isLoading = true
+            this.warnings = []
 
             const response = await axios.post('http://localhost:9000/api/auth', this.bodyData)
             // { withCredentials: true }
@@ -41,7 +43,11 @@ export default {
             }, 500)
 
             if (response.status === 200) {
-                console.log(response.data)
+                if (response.data.status == 'warning') {
+                    this.warnings.push(response.data.message)
+                } else {
+                    window.location.reload()
+                }
             }
         },
         setInputField(event, field) {
@@ -68,6 +74,18 @@ export default {
                 <input type="password" class="form-control rounded-2" id="labelInputPasswd" required @keyup="setInputField($event, 'passwd')" />
                 <div class="invalid-feedback">
                     Пожалуйста введите пароль.
+                </div>
+            </div>
+            <div class="mb-3" v-if="warnings.length">
+                <div class="alert alert-danger p-1" role="alert">
+                    <ul class="list-group list-group-flush">
+                        <li 
+                            class="list-group-item list-group-item-danger"
+                            v-for="item in warnings"
+                        >
+                            {{ item }}
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="col text-center">

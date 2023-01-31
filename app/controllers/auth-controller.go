@@ -1,17 +1,24 @@
 package controllers
 
 import (
+	"attrtour/app/http/dto"
 	"attrtour/app/services"
 	"attrtour/core"
+	"encoding/json"
+	"io"
 )
 
 type AuthController core.BaseController
 
 func (ac *AuthController) Login() {
-	as := services.Auth{}
-	token, _ := as.CreateToken(2, "gTphmKeR2fAbNTasWY90pDwsXOEFZWTT")
+	b, _ := io.ReadAll(ac.Req.Body)
+	dtoData := dto.AuthDto{}
+	_ = json.Unmarshal(b, &dtoData)
 
-	ac.Wri.Write([]byte(token))
+	as := services.AuthService{}
+	as.RequestInit(ac.DBLink, ac.Wri, ac.Req)
+
+	as.Login(dtoData)
 
 }
 func (ac *AuthController) VerifyToken() {
