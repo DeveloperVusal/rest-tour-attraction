@@ -47,6 +47,7 @@ func init() {
 
 	gormDB.AutoMigrate(models.Items...)
 
+	web := routes.Web{}
 	api := routes.Api{
 		DBLink: gormDB,
 	}
@@ -55,6 +56,7 @@ func init() {
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		api.Run(w, r)
+		web.Run(w, r)
 	})
 
 	httpCors = cors.New(cors.Options{
