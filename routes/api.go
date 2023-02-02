@@ -23,10 +23,11 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	}
 	route := core.Route{
 		Routes: map[string][]interface{}{},
+		Prefix: "/api",
 	}
 
 	// Group paths
-	route.Get("/api/group/get", func(args map[string]interface{}) {
+	route.Get("/group/get", func(args map[string]interface{}) {
 		gc := &controllers.GroupController{
 			Req:    req,
 			Wri:    wri,
@@ -36,7 +37,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Get()
 	})
 
-	route.Get("/api/group/get/{id}/", func(args map[string]interface{}) {
+	route.Get("/group/get/{id}/", func(args map[string]interface{}) {
 		gc := &controllers.GroupController{
 			Req:    req,
 			Wri:    wri,
@@ -54,7 +55,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 	})
 
-	route.Post("/api/group/add", func(args map[string]interface{}) {
+	route.Post("/group/add", func(args map[string]interface{}) {
 		gc := &controllers.GroupController{
 			Req:    req,
 			Wri:    wri,
@@ -64,7 +65,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Add()
 	})
 
-	route.Patch("/api/group/save", func(args map[string]interface{}) {
+	route.Patch("/group/save", func(args map[string]interface{}) {
 		gc := &controllers.GroupController{
 			Req:    req,
 			Wri:    wri,
@@ -74,7 +75,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Save()
 	})
 
-	route.Delete("/api/group/delete/{id}/", func(args map[string]interface{}) {
+	route.Delete("/group/delete/{id}/", func(args map[string]interface{}) {
 		gc := &controllers.GroupController{
 			Req:    req,
 			Wri:    wri,
@@ -93,7 +94,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	// User paths
-	route.Get("/api/user/get", func(args map[string]interface{}) {
+	route.Get("/user/get", func(args map[string]interface{}) {
 		uc := &controllers.UserController{
 			Req:    req,
 			Wri:    wri,
@@ -103,7 +104,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		uc.Get()
 	})
 
-	route.Get("/api/user/get/{id}/", func(args map[string]interface{}) {
+	route.Get("/user/get/{id}/", func(args map[string]interface{}) {
 		uc := &controllers.UserController{
 			Req:    req,
 			Wri:    wri,
@@ -121,7 +122,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 	})
 
-	route.Delete("/api/user/delete/{id}/", func(args map[string]interface{}) {
+	route.Delete("/user/delete/{id}/", func(args map[string]interface{}) {
 		uc := &controllers.UserController{
 			Req:    req,
 			Wri:    wri,
@@ -139,7 +140,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 	})
 
-	route.Post("/api/user/add", func(args map[string]interface{}) {
+	route.Post("/user/add", func(args map[string]interface{}) {
 		uc := &controllers.UserController{
 			Req:    req,
 			Wri:    wri,
@@ -149,7 +150,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		uc.Add()
 	})
 
-	route.Patch("/api/user/save", func(args map[string]interface{}) {
+	route.Patch("/user/save", func(args map[string]interface{}) {
 		uc := &controllers.UserController{
 			Req:    req,
 			Wri:    wri,
@@ -160,7 +161,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	// Language paths
-	route.Get("/api/language/get", func(args map[string]interface{}) {
+	route.Get("/language/get", func(args map[string]interface{}) {
 		lc := &controllers.LanguageController{
 			Req:    req,
 			Wri:    wri,
@@ -170,7 +171,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		lc.Get()
 	})
 
-	route.Get("/api/language/get/{id}/", func(args map[string]interface{}) {
+	route.Get("/language/get/{id}/", func(args map[string]interface{}) {
 		lc := &controllers.LanguageController{
 			Req:    req,
 			Wri:    wri,
@@ -188,7 +189,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 	})
 
-	route.Post("/api/language/add", func(args map[string]interface{}) {
+	route.Post("/language/add", func(args map[string]interface{}) {
 		lc := &controllers.LanguageController{
 			Req:    req,
 			Wri:    wri,
@@ -198,7 +199,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		lc.Add()
 	})
 
-	route.Patch("/api/language/save", func(args map[string]interface{}) {
+	route.Patch("/language/save", func(args map[string]interface{}) {
 		lc := &controllers.LanguageController{
 			Req:    req,
 			Wri:    wri,
@@ -208,7 +209,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		lc.Save()
 	})
 
-	route.Delete("/api/language/delete/{id}/", func(args map[string]interface{}) {
+	route.Delete("/language/delete/{id}/", func(args map[string]interface{}) {
 		lc := &controllers.LanguageController{
 			Req:    req,
 			Wri:    wri,
@@ -227,7 +228,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	// Continent paths
-	route.Get("/api/continent/get", func(args map[string]interface{}) {
+	route.Get("/continent/get", func(args map[string]interface{}) {
 		gc := &controllers.ContinentController{
 			Req:    req,
 			Wri:    wri,
@@ -237,7 +238,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Get()
 	})
 
-	route.Get("/api/continent/get/{id}/", func(args map[string]interface{}) {
+	route.Get("/continent/get/{id}/", func(args map[string]interface{}) {
 		gc := &controllers.ContinentController{
 			Req:    req,
 			Wri:    wri,
@@ -255,7 +256,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 	})
 
-	route.Post("/api/continent/add", func(args map[string]interface{}) {
+	route.Post("/continent/add", func(args map[string]interface{}) {
 		gc := &controllers.ContinentController{
 			Req:    req,
 			Wri:    wri,
@@ -265,7 +266,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Add()
 	})
 
-	route.Patch("/api/continent/save", func(args map[string]interface{}) {
+	route.Patch("/continent/save", func(args map[string]interface{}) {
 		gc := &controllers.ContinentController{
 			Req:    req,
 			Wri:    wri,
@@ -275,7 +276,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		gc.Save()
 	})
 
-	route.Delete("/api/continent/delete/{id}/", func(args map[string]interface{}) {
+	route.Delete("/continent/delete/{id}/", func(args map[string]interface{}) {
 		gc := &controllers.ContinentController{
 			Req:    req,
 			Wri:    wri,
@@ -294,7 +295,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	// Country paths
-	route.Get("/api/country/get", func(args map[string]interface{}) {
+	route.Get("/country/get", func(args map[string]interface{}) {
 		cc := &controllers.CountryController{
 			Req:    req,
 			Wri:    wri,
@@ -304,7 +305,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		cc.Get()
 	})
 
-	route.Get("/api/country/get/{id}/", func(args map[string]interface{}) {
+	route.Get("/country/get/{id}/", func(args map[string]interface{}) {
 		cc := &controllers.CountryController{
 			Req:    req,
 			Wri:    wri,
@@ -322,7 +323,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 	})
 
-	route.Post("/api/country/add", func(args map[string]interface{}) {
+	route.Post("/country/add", func(args map[string]interface{}) {
 		cc := &controllers.CountryController{
 			Req:    req,
 			Wri:    wri,
@@ -332,7 +333,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		cc.Add()
 	})
 
-	route.Patch("/api/country/save", func(args map[string]interface{}) {
+	route.Patch("/country/save", func(args map[string]interface{}) {
 		cc := &controllers.CountryController{
 			Req:    req,
 			Wri:    wri,
@@ -342,7 +343,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		cc.Save()
 	})
 
-	route.Delete("/api/country/delete/{id}/", func(args map[string]interface{}) {
+	route.Delete("/country/delete/{id}/", func(args map[string]interface{}) {
 		cc := &controllers.CountryController{
 			Req:    req,
 			Wri:    wri,
@@ -361,7 +362,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	// Location paths
-	route.Get("/api/location/get", func(args map[string]interface{}) {
+	route.Get("/location/get", func(args map[string]interface{}) {
 		lc := &controllers.LocationController{
 			Req:    req,
 			Wri:    wri,
@@ -371,7 +372,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		lc.Get()
 	})
 
-	route.Get("/api/location/get/{id}/", func(args map[string]interface{}) {
+	route.Get("/location/get/{id}/", func(args map[string]interface{}) {
 		lc := &controllers.LocationController{
 			Req:    req,
 			Wri:    wri,
@@ -389,7 +390,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 	})
 
-	route.Post("/api/location/add", func(args map[string]interface{}) {
+	route.Post("/location/add", func(args map[string]interface{}) {
 		lc := &controllers.LocationController{
 			Req:    req,
 			Wri:    wri,
@@ -399,7 +400,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		lc.Add()
 	})
 
-	route.Patch("/api/location/save", func(args map[string]interface{}) {
+	route.Patch("/location/save", func(args map[string]interface{}) {
 		lc := &controllers.LocationController{
 			Req:    req,
 			Wri:    wri,
@@ -409,7 +410,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		lc.Save()
 	})
 
-	route.Delete("/api/location/delete/{id}/", func(args map[string]interface{}) {
+	route.Delete("/location/delete/{id}/", func(args map[string]interface{}) {
 		lc := &controllers.LocationController{
 			Req:    req,
 			Wri:    wri,
@@ -428,7 +429,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	// Upload paths
-	route.Post("/api/main-image/upload", func(args map[string]interface{}) {
+	route.Post("/main-image/upload", func(args map[string]interface{}) {
 		mic := &controllers.MainImageController{
 			Req:    req,
 			Wri:    wri,
@@ -438,7 +439,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		mic.Upload()
 	})
 
-	route.Patch("/api/main-image/save", func(args map[string]interface{}) {
+	route.Patch("/main-image/save", func(args map[string]interface{}) {
 		mic := &controllers.MainImageController{
 			Req:    req,
 			Wri:    wri,
@@ -448,7 +449,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		mic.Save()
 	})
 
-	route.Delete("/api/main-image/remove/{id}/", func(args map[string]interface{}) {
+	route.Delete("/main-image/remove/{id}/", func(args map[string]interface{}) {
 		mic := &controllers.MainImageController{
 			Req:    req,
 			Wri:    wri,
@@ -469,7 +470,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	/*==========================*/
 
 	//Auth
-	route.Post("/api/auth", func(args map[string]interface{}) {
+	route.Post("/auth", func(args map[string]interface{}) {
 		ac := &controllers.AuthController{
 			Req:    req,
 			Wri:    wri,
