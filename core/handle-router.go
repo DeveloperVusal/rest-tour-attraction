@@ -18,7 +18,7 @@ func (hr *HandleRouter) TunnelControl(routes *map[string][]interface{}) {
 	for path, interf := range *routes {
 		hPath, paramsMap, paramsSlice := hr.HandlePath(&path)
 
-		if hr.IsValidPath(hPath, paramsSlice) {
+		if hr.IsValidPath(hPath, paramsSlice) || hPath == "/" {
 			isNotFound = false
 			method := interf[0].(string)
 
