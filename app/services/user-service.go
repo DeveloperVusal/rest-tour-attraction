@@ -16,6 +16,11 @@ type UserService struct {
 	GetDto dto.GetUserDto
 }
 
+func (us *UserService) Init() {
+	groupId := us.createRootGroup()
+	us.createRootUser(groupId)
+}
+
 func (us *UserService) GetAll() {
 	var user []models.User
 
@@ -181,11 +186,43 @@ func (us *UserService) Delete() {
 }
 
 func (us *UserService) HashPassword(passwd string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(passwd), 14)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(passwd), bcrypt.DefaultCost)
 	return string(bytes), err
 }
 
 func (us *UserService) CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func (us *UserService) createRootGroup() uint {
+	env := core.Helpers{}
+	var group models.Group
+
+	us.DBLink.First(&group, "name = ?", env.Env("APP_ROOT_GROUP"))
+
+	if group.Id <= 0 {
+		isVisible := true
+		group = models.Group{
+			Name:      env.Env("APP_ROOT_GROUP"),
+			IsVisible: &isVisible,
+		}
+
+		us.DBLink.Save(&group)
+	}
+
+	return group.Id
+}
+
+func (us *UserService) createRootUser(groupId uint) {
+	env := core.Helpers{}
+
+	isConfirm := true
+	user := models.User{
+		GroupId:   groupId,
+		Username:  env.Env("APP_ROOT_LOGIN"),
+		Password:  env.Env("APP_ROOT_PASSWD"),
+		IsConfirm: &isConfirm,
+	}
+	us.DBLink.Save(&user)
 }

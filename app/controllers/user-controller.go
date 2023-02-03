@@ -14,6 +14,7 @@ type UserController core.BaseController
 func (uc *UserController) Get() {
 	us := services.UserService{}
 	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
+	us.Init()
 
 	us.GetAll()
 }
@@ -25,6 +26,7 @@ func (uc *UserController) GetById(id uint) {
 		},
 	}
 	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
+	us.Init()
 
 	us.GetById()
 }
@@ -36,6 +38,7 @@ func (uc *UserController) Add() {
 
 	us := services.UserService{}
 	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
+	us.Init()
 
 	us.Create(dtoData)
 }
@@ -47,6 +50,7 @@ func (uc *UserController) Save() {
 
 	us := services.UserService{}
 	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
+	us.Init()
 
 	us.Save(dtoData)
 }
@@ -58,6 +62,7 @@ func (uc *UserController) Delete(id uint) {
 		},
 	}
 	us.RequestInit(uc.DBLink, uc.Wri, uc.Req)
+	us.Init()
 
 	us.Delete()
 }
