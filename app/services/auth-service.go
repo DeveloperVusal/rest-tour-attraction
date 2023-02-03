@@ -8,6 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 
 	"attrtour/app/http/dto"
+	"attrtour/app/models"
 	"attrtour/core"
 	// "attrtour/app/models"
 )
@@ -26,14 +27,46 @@ func (as *AuthService) Login(_dto dto.AuthDto) {
 
 	if validate.Is(_dto) {
 		env := core.Helpers{}
+		us := UserService{}
 
 		if env.Env("APP_ROOT_LOGIN") == _dto.Username {
-			us := UserService{}
-
 			hashPasswd, _ := us.HashPassword(env.Env("APP_ROOT_PASSWD"))
 
 			if us.CheckPasswordHash(_dto.Password, hashPasswd) {
 				access, refresh := as.CreatePairTokens(0, env.Env("APP_JWT_SECRET"))
+
+				jsonData, _ := json.Marshal(map[string]interface{}{
+					"access_token":  access,
+					"refresh_token": refresh,
+				})
+
+				as.Wri.Write(jsonData)
+			} else {
+				jsonData, _ := json.Marshal(map[string]interface{}{
+					"status":  "warning",
+					"message": "incorrect data",
+				})
+
+				as.Wri.Write(jsonData)
+			}
+		} else {
+			var user models.User
+
+			as.DBLink.Model(models.User{Username: _dto.Username}).First(&user)
+
+			if us.CheckPasswordHash(_dto.Password, user.Password) {
+				access, refresh := as.CreatePairTokens(user.Id, env.Env("APP_JWT_SECRET"))
+
+				auth := models.Auth{
+					UserId:       user.Id,
+					AccessToken:  access,
+					RefreshToken: refresh,
+					Ip:           as.Req.RemoteAddr,
+					Device:       "site",
+					UserAgent:    as.Req.UserAgent(),
+				}
+
+				as.DBLink.Save(&auth)
 
 				jsonData, _ := json.Marshal(map[string]interface{}{
 					"access_token":  access,
