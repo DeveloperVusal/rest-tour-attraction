@@ -2,6 +2,9 @@
 import './styles/form.scss'
 
 import axios from 'axios'
+import cookie from 'cookiejs';
+
+import { ReqUrls } from '@/requstes'
 
 export default {
     mounted() {
@@ -37,7 +40,7 @@ export default {
             this.isLoading = true
             this.warnings = []
 
-            const response = await axios.post('http://localhost:9000/api/auth', this.bodyData) // { withCredentials: true }
+            const response = await axios.post('http://localhost:9000'+ReqUrls.account.auth, this.bodyData) // { withCredentials: true }
             
             setTimeout(() => {
                 this.isLoading = false
@@ -47,9 +50,12 @@ export default {
                 if (response.data.status == 'warning') {
                     this.warnings.push(response.data.message)
                 } else {
-                    console.log(response.data)
-                    localStorage.setItem('access_token', response.data.access_token)
+                    cookie('access_token', response.data.access_token, { 'expires': 30, 'path': '/', 'domain':'', 'httponly': true, 'secure': true })
                     localStorage.setItem('refresh_token', response.data.refresh_token)
+
+                    if (localStorage.getItem('refresh_token')) {
+                        window.location.href = '/cpanel'
+                    }
                 }
             }
         },

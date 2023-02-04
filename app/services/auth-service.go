@@ -26,6 +26,8 @@ func (as *AuthService) Login(_dto dto.AuthDto) {
 	validate := dto.DtoValidate{}
 
 	if validate.Is(_dto) {
+		var user models.User
+
 		env := core.Helpers{}
 		us := UserService{}
 
@@ -33,7 +35,19 @@ func (as *AuthService) Login(_dto dto.AuthDto) {
 			hashPasswd, _ := us.HashPassword(env.Env("APP_ROOT_PASSWD"))
 
 			if us.CheckPasswordHash(_dto.Password, hashPasswd) {
-				access, refresh := as.CreatePairTokens(0, env.Env("APP_JWT_SECRET"))
+				as.DBLink.First(&user, "username = ?", _dto.Username)
+
+				access, refresh := as.CreatePairTokens(user.Id, env.Env("APP_JWT_SECRET"))
+				auth := models.Auth{
+					UserId:       user.Id,
+					AccessToken:  access,
+					RefreshToken: refresh,
+					Ip:           as.Req.RemoteAddr,
+					Device:       "site",
+					UserAgent:    as.Req.UserAgent(),
+				}
+
+				as.DBLink.Save(&auth)
 
 				jsonData, _ := json.Marshal(map[string]interface{}{
 					"access_token":  access,
@@ -50,8 +64,6 @@ func (as *AuthService) Login(_dto dto.AuthDto) {
 				as.Wri.Write(jsonData)
 			}
 		} else {
-			var user models.User
-
 			as.DBLink.Model(models.User{Username: _dto.Username}).First(&user)
 
 			if us.CheckPasswordHash(_dto.Password, user.Password) {
