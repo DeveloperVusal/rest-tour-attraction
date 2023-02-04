@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Cookies from 'js-cookie'
+import cookie from 'cookiejs'
 
 import { ReqUrls } from '@/requstes'
 // import { buildParamsUri } from './functions'
@@ -10,7 +10,7 @@ const $api = axios.create({
 })
 
 $api.interceptors.request.use((config) => {
-    const accessToken = Cookies.get('access_token')
+    const accessToken = cookie.get('access_token')
 
     config.headers.Authorization = `Bearer ${(accessToken.length) ? accessToken : ''}`
     config.headers.crossDomain = true
@@ -22,7 +22,7 @@ $api.interceptors.response.use((config) => {
     return config;
 }, async (error) => {
     if (error.response.status === 401) {
-        if (Cookies.get('access_token').length) {
+        if (cookie.get('access_token').length) {
             let response = await $api.get(ReqUrls.account.refresh)
 
             response = await response.json()

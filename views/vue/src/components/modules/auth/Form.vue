@@ -2,7 +2,7 @@
 import './styles/form.scss'
 
 import axios from 'axios'
-import cookie from 'cookiejs';
+import cookie from 'cookiejs'
 
 import { ReqUrls } from '@/requstes'
 
