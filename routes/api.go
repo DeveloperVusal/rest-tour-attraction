@@ -13,7 +13,8 @@ import (
 )
 
 type Api struct {
-	DBLink *gorm.DB
+	DBLink      *gorm.DB
+	IsFindRoute *bool
 }
 
 func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
@@ -470,7 +471,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	/*==========================*/
 
 	//Auth
-	route.Post("/auth", func(args map[string]interface{}) {
+	route.Post("/account/auth", func(args map[string]interface{}) {
 		ac := &controllers.AuthController{
 			Req:    req,
 			Wri:    wri,
@@ -481,5 +482,5 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	// Run Router Handle
-	router.TunnelControl(&route.Routes)
+	router.TunnelControl(&route.Routes, api.IsFindRoute)
 }

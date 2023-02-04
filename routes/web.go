@@ -5,9 +5,11 @@ import (
 	"net/http"
 )
 
-type Web struct{}
+type Web struct {
+	IsFindRoute *bool
+}
 
-func (api *Web) Run(wri http.ResponseWriter, req *http.Request) {
+func (web *Web) Run(wri http.ResponseWriter, req *http.Request) {
 	router := core.HandleRouter{
 		Req: req,
 		Wri: wri,
@@ -24,5 +26,5 @@ func (api *Web) Run(wri http.ResponseWriter, req *http.Request) {
 	})
 
 	// Run Router Handle
-	router.TunnelControl(&route.Routes)
+	router.TunnelControl(&route.Routes, web.IsFindRoute)
 }

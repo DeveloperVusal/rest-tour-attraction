@@ -12,7 +12,7 @@ type HandleRouter struct {
 	Wri http.ResponseWriter
 }
 
-func (hr *HandleRouter) TunnelControl(routes *map[string][]interface{}) {
+func (hr *HandleRouter) TunnelControl(routes *map[string][]interface{}, isFindRoute *bool) {
 	isNotFound := true
 
 	for path, interf := range *routes {
@@ -39,6 +39,8 @@ func (hr *HandleRouter) TunnelControl(routes *map[string][]interface{}) {
 
 				f_ptr(appendArgs)
 				hr.Wri.WriteHeader(http.StatusOK)
+
+				*isFindRoute = true
 			} else {
 				hr.Wri.WriteHeader(http.StatusMethodNotAllowed)
 				hr.Wri.Write([]byte("Method Not Allowed\n"))
