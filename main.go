@@ -67,7 +67,7 @@ func init() {
 	httpCors = cors.New(cors.Options{
 		AllowedOrigins:   []string{env.Env("APP_HOST_ORIGIN")},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Accept-Language", "Content-Type", "X-Requested-With"},
+		AllowedHeaders:   []string{"Authorization", "Accept", "Accept-Language", "Content-Type", "X-Requested-With", "crossDomain"},
 		AllowCredentials: true,
 		// Enable Debugging for testing, consider disabling in production
 		Debug: true,

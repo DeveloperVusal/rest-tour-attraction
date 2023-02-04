@@ -22,11 +22,21 @@ func (ac *AuthController) Login() {
 
 }
 func (ac *AuthController) VerifyToken() {
+	as := services.AuthService{}
+	as.RequestInit(ac.DBLink, ac.Wri, ac.Req)
 
+	as.VerifyToken(ac.Req.Header["Authorization"])
 }
 
 func (ac *AuthController) Refresh() {
+	token := ac.Req.FormValue("token")
 
+	if len(token) > 50 {
+		as := services.AuthService{}
+		as.RequestInit(ac.DBLink, ac.Wri, ac.Req)
+
+		as.Refresh(token)
+	}
 }
 
 func (ac *AuthController) Logout() {

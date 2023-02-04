@@ -2,7 +2,10 @@ package services
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -100,6 +103,48 @@ func (as *AuthService) Login(_dto dto.AuthDto) {
 	}
 }
 
+func (as *AuthService) VerifyToken(_auth []string) {
+	var auth models.Auth
+
+	split := strings.Split(_auth[0], " ")
+	tokenString := split[1]
+	isVerify, _ := as.IsVerifyToken(tokenString)
+
+	as.DBLink.First(&auth, "access_token = ?", tokenString)
+
+	if auth.Id <= 0 {
+		isVerify = false
+	}
+
+	if isVerify {
+		as.Wri.WriteHeader(http.StatusOK)
+	} else {
+		as.Wri.WriteHeader(http.StatusUnauthorized)
+	}
+}
+
+func (as *AuthService) IsVerifyToken(tokenString string) (bool, *jwt.Token) {
+	env := core.Helpers{}
+
+	var signedKey interface{} = []byte(env.Env("APP_JWT_SECRET"))
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return signedKey, nil
+	})
+
+	if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return true, token
+	} else {
+		fmt.Println(err)
+		return false, token
+	}
+}
+
 func (as *AuthService) CreatePairTokens(id uint, secret string) (string, string) {
 	var signedKey interface{} = []byte(secret)
 
@@ -123,4 +168,46 @@ func (as *AuthService) CreatePairTokens(id uint, secret string) (string, string)
 	refresh, _ := initToken.SignedString(signedKey)
 
 	return access, refresh
+}
+
+func (as *AuthService) Refresh(tokenString string) {
+	env := core.Helpers{}
+	isVerify, jwtToken := as.IsVerifyToken(tokenString)
+
+	if isVerify {
+		var auth models.Auth
+		var jsonData []byte
+
+		claims, _ := jwtToken.Claims.(jwt.MapClaims)
+		userId, _ := strconv.ParseUint(fmt.Sprintf("%v", claims["user_id"]), 10, 64)
+		access, refresh := as.CreatePairTokens(uint(userId), env.Env("APP_JWT_SECRET"))
+
+		as.DBLink.First(&auth, "refresh_token = ?", tokenString)
+
+		if auth.Id > 0 {
+			auth.RefreshToken = refresh
+			auth.AccessToken = access
+
+			as.DBLink.Save(&auth)
+
+			jsonData, _ = json.Marshal(map[string]interface{}{
+				"access_token":  access,
+				"refresh_token": refresh,
+			})
+		} else {
+			jsonData, _ = json.Marshal(map[string]interface{}{
+				"status":  "error",
+				"message": "Invalid token",
+			})
+		}
+		as.Wri.Write(jsonData)
+
+	} else {
+		jsonData, _ := json.Marshal(map[string]interface{}{
+			"status":  "error",
+			"message": "Token is expired",
+		})
+
+		as.Wri.Write(jsonData)
+	}
 }

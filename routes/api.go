@@ -470,7 +470,7 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 
 	/*==========================*/
 
-	//Auth
+	// Auth
 	route.Post("/account/auth", func(args map[string]interface{}) {
 		ac := &controllers.AuthController{
 			Req:    req,
@@ -479,6 +479,28 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		}
 
 		ac.Login()
+	})
+
+	// Verify jwt
+	route.Get("/account/auth_verify", func(args map[string]interface{}) {
+		ac := &controllers.AuthController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		ac.VerifyToken()
+	})
+
+	// Refresh jwt tokens
+	route.Get("/account/refresh", func(args map[string]interface{}) {
+		ac := &controllers.AuthController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		ac.Refresh()
 	})
 
 	// Run Router Handle

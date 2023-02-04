@@ -5,7 +5,7 @@ import { ReqUrls } from '@/requstes'
 // import { buildParamsUri } from './functions'
 
 const $api = axios.create({
-    withCredentials: true,
+    // withCredentials: true,
     baseURL: 'http://localhost:9000'
 })
 
@@ -23,22 +23,24 @@ $api.interceptors.response.use((config) => {
 }, async (error) => {
     if (error.response.status === 401) {
         if (cookie.get('access_token').length) {
-            let response = await $api.get(ReqUrls.account.refresh)
+            let response = await $api.get(ReqUrls.account.refresh, {
+                params: {
+                    token: localStorage.getItem('refresh_token')
+                }
+            })
 
-            response = await response.json()
-
-            if (response.status === 'success') {
-                cookie('access_token', response.data.access_token, { 'expires': 30, 'path': '/', 'domain':'', 'httponly': true })
-                localStorage.setItem('refresh_token', response.data.refresh_token)
-
-                console.log(response.data)
-                // const params = buildParamsUri()
-
-                // if (typeof params === 'object' && params.redirect) {
-                //     window.location.href = params.redirect
-                // } else {
-                //     window.location.href = process.env.VUE_APP_DEFAULT_REDIRECT
-                // }
+            if (response.status === 200) {
+                if (response.data.hasOwnProperty('access_token')) {
+                    cookie.set('access_token', response.data.access_token, {
+                        'expires': 30, 
+                        'path': '/', 
+                        'domain':'', 
+                        'httponly': true 
+                    })
+                    localStorage.setItem('refresh_token', response.data.refresh_token)
+                } else {
+                    if (window.location.pathname != '/auth') window.location.href = '/auth'
+                }
             }
         }
     }
