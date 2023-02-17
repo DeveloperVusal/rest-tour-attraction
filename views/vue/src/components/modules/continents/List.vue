@@ -1,17 +1,37 @@
 <script>
+import { ref, inject } from 'vue'
 import axios from 'axios'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import { ReqUrls } from '@/requstes'
 
 export default {
+    setup() {
+        const inputRefs = ref([])
+        const onRemoveClick = inject('requestRemove')
+
+        return {
+            inputRefs,
+            onRemoveClick
+        }
+    },
     mounted() {
         this.loadData()
     },
     data() {
         return {
             isLoading: false,
-            bodyData: []
+            bodyData: null
+        }
+    },
+    watch: {
+        'inputRefs': {
+            handler(refs) {
+                refs.map(item => {
+                    if (!item.checked) item.indeterminate = true
+                })
+            },
+            deep: true
         }
     },
     methods: {
@@ -28,22 +48,6 @@ export default {
                 this.bodyData = response.data
             }
         },
-        formatDate(tm) {
-            const fmDate = new Date(tm)
-
-            let day = Number(fmDate.getUTCDate()),
-                month = Number(fmDate.getUTCMonth()+1),
-                year = Number(fmDate.getUTCFullYear()),
-                hour = Number(fmDate.getHours()),
-                min = Number(fmDate.getMinutes())
-
-            if (day < 10) day = '0'+day
-            if (month < 10) month = '0'+month
-            if (hour < 10) hour = '0'+hour
-            if (min < 10) month = '0'+min
-
-            return day+'.'+month+'.'+year+' в '+hour+':'+min
-        }
     }
 }
 </script>
@@ -53,7 +57,10 @@ export default {
         <div class="row">
             <div class="col d-flex align-items-center justify-content-between">
                 <h4 class="mb-0 text-white d-inline">Материки</h4>
-                <button class="btn btn-primary">Добавить</button>
+
+                <router-link :to="{name: 'continents', params: { section: 'add' }}">
+                    <button class="btn btn-primary">Добавить</button>
+                </router-link>
             </div>
         </div>
     </div>
@@ -79,17 +86,40 @@ export default {
                     <td scope="col">{{ item.Name }}</td>
                     <td scope="col" align="center">
                         <div class="form-check form-check-inline" style="margin-right: -0.6rem;">
-                            <input class="form-check-input" type="checkbox" :checked="(item.IsVisible) ? 'true' : 'false'" disabled />
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                :checked="(item.IsVisible) ? true : null"
+                                disabled 
+                                ref="inputRefs"
+                            />
                         </div>
                     </td>
                     <td scope="col" align="center">
                         <div class="form-check form-check-inline" style="margin-right: -0.6rem;">
-                            <input class="form-check-input" type="checkbox" :checked="(item.IsArchive) ? 'true' : 'false'" disabled />
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                :checked="(item.IsArchive) ? true : null"
+                                disabled 
+                                ref="inputRefs"
+                            />
                         </div>
                     </td>
-                    <td  align="center">
-                        <i class="bi bi-pencil-fill"></i> - 
-                        <i class="bi bi-trash3-fill"></i>
+                    <td align="center" class="d-flex justify-content-evenly">
+                        <router-link 
+                            :to="{name: 'continents', params: { section: 'edit', id: item.Id }}"
+                            title="Редактировать"
+                        >
+                            <i class="bi bi-pencil-fill link-secondary"></i>
+                        </router-link>
+                        <div 
+                            to="#"
+                            title="Удалить"
+                            @click="onRemoveClick('continent', item.Id)"
+                        >
+                            <i class="bi bi-trash3-fill link-secondary"></i>
+                        </div>
                     </td>
                 </tr>
             </tbody>

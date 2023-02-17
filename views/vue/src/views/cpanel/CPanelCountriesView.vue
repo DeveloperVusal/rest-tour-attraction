@@ -30,7 +30,15 @@ export default {
                 <Sidebar />
             </div>
             <div class="col">
-                <ListCountries />
+                <template v-if="$route.params.section == 'list'">
+                    <ListCountries />
+                </template>
+                <!-- <template v-else-if="$route.params.section == 'add'">
+                    <AddCountries />
+                </template>
+                <template v-else-if="$route.params.section == 'save'">
+                    <SaveCountries />
+                </template> -->
             </div>
         </div>
     </div>

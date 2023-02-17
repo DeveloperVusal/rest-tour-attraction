@@ -1,6 +1,8 @@
 <script>
-import ListContinents from '@/components/modules/continents/List.vue'
 import Sidebar from '@/components/inc/Sidebar.vue'
+import ListContinents from '@/components/modules/continents/List.vue'
+import AddContinents from '@/components/modules/continents/Add.vue'
+import EditContinents from '@/components/modules/continents/Edit.vue'
 
 import { useModulesStore } from '@/stores/modules'
 
@@ -8,6 +10,8 @@ export default {
     components: {
         Sidebar,
         ListContinents,
+        AddContinents,
+        EditContinents,
     },
     mounted() {
         this.storeModules.setModuleActive('continents')
@@ -18,7 +22,7 @@ export default {
         return {
             storeModules
         }
-    }
+    },
 }
 </script>
 
@@ -30,7 +34,15 @@ export default {
                 <Sidebar />
             </div>
             <div class="col">
-                <ListContinents />
+                <template v-if="$route.params.section == 'list'">
+                    <ListContinents />
+                </template>
+                <template v-else-if="$route.params.section == 'add'">
+                    <AddContinents />
+                </template>
+                <template v-else-if="$route.params.section == 'edit'">
+                    <EditContinents />
+                </template>
             </div>
         </div>
     </div>

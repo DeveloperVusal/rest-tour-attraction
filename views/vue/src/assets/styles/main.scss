@@ -16,4 +16,16 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   font-weight: normal;
+
+  a, div {
+    .bi {
+      transition: 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.7;
+        transition: 0.3s;
+      }
+    }
+  }
 }

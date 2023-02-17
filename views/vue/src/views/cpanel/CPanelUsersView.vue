@@ -30,7 +30,15 @@ export default {
                 <Sidebar />
             </div>
             <div class="col">
-                <ListUsers />
+                <template v-if="$route.params.section == 'list'">
+                    <ListUsers />
+                </template>
+                <!-- <template v-else-if="$route.params.section == 'add'">
+                    <AddUsers />
+                </template>
+                <template v-else-if="$route.params.section == 'save'">
+                    <SaveUsers />
+                </template> -->
             </div>
         </div>
     </div>

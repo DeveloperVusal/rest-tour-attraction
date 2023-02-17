@@ -1,0 +1,183 @@
+<script>
+import { inject } from 'vue'
+import axios from 'axios'
+import 'bootstrap-icons/font/bootstrap-icons.css'
+
+import { ReqUrls } from '@/requstes'
+
+export default {
+    mounted() {
+        this.languages = inject('loadLanguages')()
+        this.languages.then(r => this.languages = r)
+
+        this.loadData()
+        inject('initValidateForms')()
+    },
+    data() {
+        return {
+            itemId: Number(this.$router.currentRoute.value.params.id),
+            languages: null,
+            isLoading: false,
+            renderIsLoading: false,
+            sendBodyData: {
+                id: 0, 
+                name: '',
+                language_id: 0,
+                is_archive: false,
+                is_visible: false,
+            },
+            renderBodyData: {
+                Name: '',
+                IsArchive: false,
+                IsVisible: false,
+            },
+            warnings: []
+        }
+    },
+    methods: {
+        async loadData() {
+            this.renderIsLoading = true
+            
+            const response = await axios.get('http://localhost:9000'+ReqUrls.continent.get+'/'+this.itemId)
+            
+            setTimeout(() => {
+                this.renderIsLoading = false
+            }, 500)
+
+            if (response.status === 200) {
+                this.renderBodyData = response.data
+            }
+        },
+        async submitForm(form) {
+            const formData = new FormData(form)
+
+            this.isLoading = true
+            this.warnings = []
+            this.sendBodyData.id = this.itemId
+
+            let objectFM = {};
+            formData.forEach((value, key) => objectFM[key] = value);
+
+            objectFM.id = this.itemId
+            objectFM.is_visible = (objectFM.hasOwnProperty('is_visible')) ? true : false
+            objectFM.is_archive = (objectFM.hasOwnProperty('is_archive')) ? true : false
+
+            const response = await axios.patch('http://localhost:9000'+ReqUrls.continent.update, this.sendBodyData)
+            
+            setTimeout(() => {
+                this.isLoading = false
+            }, 500)
+
+            if (response.status === 201) {
+                if (response.data.status == 'success') {
+                    this.$router.push({name: 'continents', params: {section: 'list'}})
+                } else {
+                    this.warnings.push(response.data)
+                }
+            } else if (response.status === 200) {
+                this.warnings.push(response.data)
+            } else {
+                alert('Что-то пошло не так, повторите попытку позже!')
+            }
+        },
+        setInputField(event, field) {
+            let value = event.target.value
+
+            if (field === 'language_id') value = Number(value)
+            if (
+                field === 'is_visible' ||
+                field === 'is_archive'
+            ) value = (value == 'on') ? true : false
+
+            this.sendBodyData[field] = value
+        }
+    }
+}
+</script>
+
+<template>
+    <div class="container bg-secondary rounded border pl-3 pr-3 pt-2 pb-2 mb-3">
+        <div class="row">
+            <div class="col d-flex align-items-center justify-content-between">
+                <h4 class="mb-0 text-white d-inline">Сохранение материка</h4>
+                <!-- <button class="btn btn-primary">Добавить</button> -->
+            </div>
+        </div>
+    </div>
+    <div class="container bg-white rounded border pt-4 p-3">
+        <form class="row g-3 needs-validation" novalidate @submit.prevent="submitForm($event.target)">
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="valid-Lang" class="form-label">Язык</label>
+                    <select name="language_id" @change="setInputField($event, 'language_id')" class="form-select" id="valid-Lang" required>
+                        <template v-if="languages">
+                            <option 
+                                v-for="lang in languages" 
+                                :value="lang.Id"
+                                :selected="(lang.Id == renderBodyData.LanguageId) ? true : null"
+                            >
+                                {{ lang.Name }}
+                            </option>
+                        </template>
+                        <template v-else>
+                            <option value="0">Пусто</option>
+                        </template>
+                    </select>
+                    <div class="invalid-feedback">
+                        Выберите Язык записи
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="valid-Name" class="form-label">Название</label>
+                    <input type="text" :value="renderBodyData.Name" @keyup="setInputField($event, 'name')" name="name" class="form-control" id="valid-Name" required>
+                    <div class="invalid-feedback">
+                        Заполните Название материка
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="is_visible" :checked="(renderBodyData.IsVisible) ? true : null" @change="setInputField($event, 'is_visible')" id="validCheck-IsVisible">
+                        <label class="form-check-label" for="validCheck-IsVisible">
+                            Показывать
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="is_archive" :checked="(renderBodyData.IsArchive) ? true : null" @change="setInputField($event, 'is_archive')" id="validCheck-IsArchive">
+                        <label class="form-check-label" for="validCheck-IsArchive">
+                            Архив
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3" v-if="warnings.length">
+                <div class="col">
+                    <div class="alert alert-danger p-1" role="alert">
+                        <ul class="list-group list-group-flush">
+                            <li 
+                                class="list-group-item list-group-item-danger"
+                                v-for="item in warnings"
+                            >
+                                {{ item }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary" type="submit">
+                        <span v-if="isLoading">
+                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </span>
+                        <span v-else>Сохранить</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>

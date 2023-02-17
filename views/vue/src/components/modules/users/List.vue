@@ -1,10 +1,18 @@
 <script>
+import { ref } from 'vue'
 import axios from 'axios'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import { ReqUrls } from '@/requstes'
 
 export default {
+    setup() {
+        const inputRefs = ref([])
+
+        return {
+            inputRefs
+        }
+    },
     mounted() {
         this.loadData()
     },
@@ -12,6 +20,16 @@ export default {
         return {
             isLoading: false,
             bodyData: []
+        }
+    },
+    watch: {
+        'inputRefs': {
+            handler(refs) {
+                refs.map(item => {
+                    if (!item.checked) item.indeterminate = true
+                })
+            },
+            deep: true
         }
     },
     methods: {
@@ -70,7 +88,7 @@ export default {
                     <th scope="col">Логин</th>
                     <th scope="col">Почта</th>
                     <th scope="col">Группа</th>
-                    <th scope="col" style="text-align: center;">Видимость</th>
+                    <th scope="col" style="text-align: center;">Подтвержден</th>
                     <th scope="col" style="text-align: center;">Архив</th>
                     <th></th>
                 </tr>
@@ -83,12 +101,24 @@ export default {
                     <td scope="col">{{ item.Group.Name }}</td>
                     <td scope="col" align="center">
                         <div class="form-check form-check-inline" style="margin-right: -0.6rem;">
-                            <input class="form-check-input" type="checkbox" :checked="(item.IsVisible) ? 'true' : 'false'" disabled />
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                :checked="(item.IsConfirm) ? true : null"
+                                disabled 
+                                ref="inputRefs"
+                            />
                         </div>
                     </td>
                     <td scope="col" align="center">
                         <div class="form-check form-check-inline" style="margin-right: -0.6rem;">
-                            <input class="form-check-input" type="checkbox" :checked="(item.IsArchive) ? 'true' : 'false'" disabled />
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                :checked="(item.IsArchive) ? true : null"
+                                disabled 
+                                ref="inputRefs"
+                            />
                         </div>
                     </td>
                     <td align="center">

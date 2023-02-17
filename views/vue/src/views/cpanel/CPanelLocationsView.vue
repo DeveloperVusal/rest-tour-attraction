@@ -30,7 +30,15 @@ export default {
                 <Sidebar module="locations" />
             </div>
             <div class="col">
-                <ListLocations />
+                <template v-if="$route.params.section == 'list'">
+                    <ListLocations />
+                </template>
+                <!-- <template v-else-if="$route.params.section == 'add'">
+                    <AddLocations />
+                </template>
+                <template v-else-if="$route.params.section == 'save'">
+                    <SaveLocations />
+                </template> -->
             </div>
         </div>
     </div>

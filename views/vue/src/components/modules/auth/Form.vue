@@ -1,6 +1,7 @@
 <script>
 import './styles/form.scss'
 
+import { inject } from 'vue'
 import axios from 'axios'
 import cookie from 'cookiejs'
 
@@ -8,20 +9,7 @@ import { ReqUrls } from '@/requstes'
 
 export default {
     mounted() {
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                form.classList.add('was-validated')
-            }, false)
-        })
+        inject('initValidateForms')()
     },
     data() {
         return {

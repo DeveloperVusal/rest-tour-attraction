@@ -31,9 +31,12 @@ export default {
 <template>
     <div class="list-group">
         <template v-for="item in this.modules">
-            <router-link :to="'/cpanel'+item.path" :class="'list-group-item list-group-item-action'+((item.active) ? ' active' : '')">
+            <router-link :to="'/cpanel'+item.path+'/list'" :class="'list-group-item list-group-item-action'+((item.active) ? ' active' : '')">
                 {{ item.name }}
             </router-link>
         </template>
+        <a href="#" class="list-group-item list-group-item-action text-danger">
+            Выйти
+        </a>
     </div>
 </template>

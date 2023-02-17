@@ -30,7 +30,15 @@ export default {
                 <Sidebar />
             </div>
             <div class="col">
-                <ListLanguages />
+                <template v-if="$route.params.section == 'list'">
+                    <ListLanguages />
+                </template>
+                <!-- <template v-else-if="$route.params.section == 'add'">
+                    <AddLanguages />
+                </template>
+                <template v-else-if="$route.params.section == 'save'">
+                    <SaveLanguages />
+                </template> -->
             </div>
         </div>
     </div>

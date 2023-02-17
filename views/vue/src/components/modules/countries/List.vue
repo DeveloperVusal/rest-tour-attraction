@@ -1,10 +1,18 @@
 <script>
+import { ref } from 'vue'
 import axios from 'axios'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import { ReqUrls } from '@/requstes'
 
 export default {
+    setup() {
+        const inputRefs = ref([])
+
+        return {
+            inputRefs
+        }
+    },
     mounted() {
         this.loadData()
     },
@@ -12,6 +20,16 @@ export default {
         return {
             isLoading: false,
             bodyData: []
+        }
+    },
+    watch: {
+        'inputRefs': {
+            handler(refs) {
+                refs.map(item => {
+                    if (!item.checked) item.indeterminate = true
+                })
+            },
+            deep: true
         }
     },
     methods: {
@@ -27,22 +45,6 @@ export default {
             if (response.status === 200) {
                 this.bodyData = response.data
             }
-        },
-        formatDate(tm) {
-            const fmDate = new Date(tm)
-
-            let day = Number(fmDate.getUTCDate()),
-                month = Number(fmDate.getUTCMonth()+1),
-                year = Number(fmDate.getUTCFullYear()),
-                hour = Number(fmDate.getHours()),
-                min = Number(fmDate.getMinutes())
-
-            if (day < 10) day = '0'+day
-            if (month < 10) month = '0'+month
-            if (hour < 10) hour = '0'+hour
-            if (min < 10) month = '0'+min
-
-            return day+'.'+month+'.'+year+' в '+hour+':'+min
         }
     }
 }
@@ -79,12 +81,24 @@ export default {
                     <td scope="col">{{ item.Name }}</td>
                     <td scope="col" align="center">
                         <div class="form-check form-check-inline" style="margin-right: -0.6rem;">
-                            <input class="form-check-input" type="checkbox" :checked="(item.IsVisible) ? 'true' : 'false'" disabled />
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                :checked="(item.IsVisible) ? true : null"
+                                disabled 
+                                ref="inputRefs"
+                            />
                         </div>
                     </td>
                     <td scope="col" align="center">
                         <div class="form-check form-check-inline" style="margin-right: -0.6rem;">
-                            <input class="form-check-input" type="checkbox" :checked="(item.IsArchive) ? 'true' : 'false'" disabled />
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                :checked="(item.IsArchive) ? true : null"
+                                disabled 
+                                ref="inputRefs"
+                            />
                         </div>
                     </td>
                     <td  align="center">

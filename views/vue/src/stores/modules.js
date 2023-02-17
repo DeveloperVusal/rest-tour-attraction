@@ -3,14 +3,14 @@ import { defineStore } from 'pinia'
 
 export const useModulesStore = defineStore('modules', () => {
     const list = ref({})
-    const prefix = '/cpanel'
+    // const prefix = '/cpanel'
 
     list.value = {
-        locations: {name: 'Места', path: '/locations/list', active: true},
-        countries: {name: 'Страны', path: '/countries/list', active: false},
-        continents: {name: 'Материки', path: '/continents/list', active: false},
-        users: {name: 'Пользователи', path: '/users/list', active: false},
-        languages: {name: 'Языки', path: '/languages/list', active: false},
+        locations: {name: 'Места', path: '/locations', active: true},
+        countries: {name: 'Страны', path: '/countries', active: false},
+        continents: {name: 'Материки', path: '/continents', active: false},
+        users: {name: 'Пользователи', path: '/users', active: false},
+        languages: {name: 'Языки', path: '/languages', active: false},
     }
     const getList = computed(() => list.value)
 
