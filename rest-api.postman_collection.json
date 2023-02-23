@@ -1,0 +1,1115 @@
+{
+	"info": {
+		"_postman_id": "4095667a-7964-48ab-bc58-de5b36ffde6d",
+		"name": "REST API - TOUR ATTRACTION",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20329542"
+	},
+	"item": [
+		{
+			"name": "Group Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Editor\",\r\n    \"is_visible\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/group/add",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"group",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Group Save",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 4,\r\n    \"is_visible\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/group/save",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"group",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Group Get All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/group/get",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"group",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Group Get by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/group/get/7",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"group",
+						"get",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Group Delete by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/group/delete/5",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"group",
+						"delete",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"alexdevCopy\",\r\n    \"password\": \"123456\",\r\n    \"group_id\": 6,\r\n    \"email\": \"alexdev@gmail.ru\",\r\n    \"age\": 26,\r\n    \"gender\": \"male\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/user/add",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"user",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Save",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"username\": \"vusaldev\",\r\n    \"password\": \"123456\",\r\n    \"group_id\": 4,\r\n    \"email\": \"developer.vusal96@gmail.com\",\r\n    \"age\": 27,\r\n    \"gender\": \"male\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/user/save",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"user",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Get All",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/user/get",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"user",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Get by Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/user/get/7",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"user",
+						"get",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Delete by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/user/delete/2",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"user",
+						"delete",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Language Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Монгол хэл\",\r\n    \"lang_code\": \"mn\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/language/add",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"language",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Language Save",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 6,\r\n    \"name\": \"Монгол хэл!\",\r\n    \"lang_code\": \"mn\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/language/save",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"language",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Language Get All",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/language/get",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"language",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Language Get by Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/language/get/7",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"language",
+						"get",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Language Delete by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/language/delete/7",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"language",
+						"delete",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Continent Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"language_id\": 3, \"name\": \"Asia\", \"is_visible\": true}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/continent/add",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"continent",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Continent Save",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"language_id\": 2,\r\n    \"name\": \"Азия\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/continent/save",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"continent",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Continent Get All",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/continent/get?language_id=2",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"continent",
+						"get"
+					],
+					"query": [
+						{
+							"key": "language_id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Continent Get by Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/continent/get/7",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"continent",
+						"get",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Continent Delete by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/continent/delete/2",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"continent",
+						"delete",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Country Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"continent_id\": 7,\r\n    \"language_id\": 2,\r\n    \"name\": \"Россия\",\r\n    \"capital\": \"Москва\",\r\n    \"code2\": \"RU\",\r\n    \"code3\": \"RUS\",\r\n    \"iso\": 643,\r\n    \"is_visible\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/country/add",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"country",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Country Save",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"continent_id\": 1,\r\n    \"language_id\": 2,\r\n    \"name\": \"Япония\",\r\n    \"capital\": \"Токио\",\r\n    \"code2\": \"JP\",\r\n    \"code3\": \"JPN\",\r\n    \"iso\": 392,\r\n    \"is_visible\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/country/save",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"country",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Country Get All",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/country/get?language_id=2",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"country",
+						"get"
+					],
+					"query": [
+						{
+							"key": "language_id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Country Get by Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/country/get/1",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"country",
+						"get",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Country Delete by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/country/delete/2",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"country",
+						"delete",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Location Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": 1,\r\n    \"language_id\": 2,\r\n    \"country_id\": 1,\r\n    \"name\": \"Дворец ширваншахов Копия\",\r\n    \"city\": \"Баку Копия\",\r\n    \"description\": \"Дворец Ширваншахов — жемчужина архитектурного наследия Азербайджана, бывшая резиденция правителей Ширвана, расположенная в самом сердце Баку.\",\r\n    \"is_visible\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/location/add",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"location",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Location Save",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"user_id\": 1,\r\n    \"language_id\": 2,\r\n    \"country_id\": 1,\r\n    \"name\": \"Дворец ширваншахов Копия\",\r\n    \"city\": \"Баку\",\r\n    \"description\": \"Дворец Ширваншахов — жемчужина архитектурного наследия Азербайджана, бывшая резиденция правителей Ширвана, расположенная в самом сердце Баку.\",\r\n    \"is_visible\": false\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/location/save",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"location",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Location Get All",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"user_id\": 1,\r\n    \"language_id\": 2,\r\n    \"country_id\": 1,\r\n    \"name\": \"Дворец ширваншахов\",\r\n    \"city\": \"Баку\",\r\n    \"description\": \"Дворец Ширваншахов — жемчужина архитектурного наследия Азербайджана, бывшая резиденция правителей Ширвана, расположенная в самом сердце Баку.\",\r\n    \"is_visible\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/location/get?language_id=2&country_id=1",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"location",
+						"get"
+					],
+					"query": [
+						{
+							"key": "language_id",
+							"value": "2"
+						},
+						{
+							"key": "country_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Location Get by Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"user_id\": 1,\r\n    \"language_id\": 2,\r\n    \"country_id\": 1,\r\n    \"name\": \"Дворец ширваншахов\",\r\n    \"city\": \"Баку\",\r\n    \"description\": \"Дворец Ширваншахов — жемчужина архитектурного наследия Азербайджана, бывшая резиденция правителей Ширвана, расположенная в самом сердце Баку.\",\r\n    \"is_visible\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/location/get/2",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"location",
+						"get",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Location Delete by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"user_id\": 1,\r\n    \"language_id\": 2,\r\n    \"country_id\": 1,\r\n    \"name\": \"Дворец ширваншахов\",\r\n    \"city\": \"Баку\",\r\n    \"description\": \"Дворец Ширваншахов — жемчужина архитектурного наследия Азербайджана, бывшая резиденция правителей Ширвана, расположенная в самом сердце Баку.\",\r\n    \"is_visible\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/location/delete/2",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"location",
+						"delete",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Main Image Upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "location_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "language_id",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "is_main",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/D:/Personal Data/Tour Attraction/Азербайджан/Баку/Дворец ширваншахов/2.jpg"
+						},
+						{
+							"key": "short_description",
+							"value": "Улица",
+							"type": "text"
+						},
+						{
+							"key": "is_visible",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:9000/api/main-image/upload",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"main-image",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Main Image Save",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "location_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "language_id",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "is_main",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/D:/Personal Data/Tour Attraction/Азербайджан/Баку/Дворец ширваншахов/3.jpg"
+						},
+						{
+							"key": "short_description",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "is_visible",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:9000/api/main-image/save",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"main-image",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Main Image Remove by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"user_id\": 1,\r\n    \"language_id\": 2,\r\n    \"country_id\": 1,\r\n    \"name\": \"Дворец ширваншахов\",\r\n    \"city\": \"Баку\",\r\n    \"description\": \"Дворец Ширваншахов — жемчужина архитектурного наследия Азербайджана, бывшая резиденция правителей Ширвана, расположенная в самом сердце Баку.\",\r\n    \"is_visible\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/main-image/remove/3",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"main-image",
+						"remove",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Account Auth Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"root\",\r\n    \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/account/auth",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"account",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Account Auth Verify",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxNjc1NTQ5ODM5IiwiZXhwIjoxNjc1NTUwNzM5LCJ1c2VyX2lkIjoxMH0.L_7D3Ij1m7jjQpwoIrwXF_EkDNt_JAEWVPJR-wweHxc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/account/auth_verify",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"account",
+						"auth_verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Account Auth Logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/account/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"account",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
