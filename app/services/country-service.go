@@ -3,11 +3,13 @@ package services
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
 	"attrtour/core"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -18,10 +20,21 @@ type CountryService struct {
 
 func (cs *CountryService) GetAll() {
 	var country []models.Country
+	var res *gorm.DB
 
-	cs.DBLink.Preload(clause.Associations).Find(&country)
+	getLangId := cs.Req.FormValue("language_id")
+	getFull, _ := strconv.ParseBool(cs.Req.FormValue("full"))
 
-	jsonData, _ := json.Marshal(country)
+	if getFull {
+		res = cs.DBLink.Preload(clause.Associations).Find(&country, "language_id = ?", getLangId)
+	} else {
+		res = cs.DBLink.Preload(clause.Associations).Find(&country, "language_id = ? AND is_visible = ? AND is_archive = ?", getLangId, true, false)
+	}
+
+	jsonData, _ := json.Marshal(map[string]interface{}{
+		"count": res.RowsAffected,
+		"list":  country,
+	})
 
 	cs.Wri.Write(jsonData)
 }

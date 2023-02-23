@@ -7,19 +7,14 @@ import { ReqUrls } from '@/requstes'
 
 export default {
     mounted() {
-        this.languages = inject('loadLanguages')()
-        this.languages.then(r => this.languages = r)
-
         inject('initValidateForms')()
     },
     data() {
         return {
-            currentLanguageId: this.$router.currentRoute.value.query.lang,
-            languages: null,
             isLoading: false,
             bodyData: {
-                language_id: Number(this.$router.currentRoute.value.query.lang) ?? 2,
                 name: '',
+                lang_code: '',
                 is_visible: true,
             },
             warnings: []
@@ -32,15 +27,15 @@ export default {
             this.isLoading = true
             this.warnings = []
 
-            const response = await axios.post('http://localhost:9000'+ReqUrls.continent.add, this.bodyData)
+            const response = await axios.post('http://localhost:9000'+ReqUrls.language.add, this.bodyData)
             
             setTimeout(() => {
                 this.isLoading = false
             }, 500)
 
             if (response.status === 201) {
-                if (response.data.hasOwnProperty('continent_id')) {
-                    this.$router.push({name: 'continents', params: {section: 'list'}, query: {lang: this.bodyData.language_id}})
+                if (response.data.hasOwnProperty('language_id')) {
+                    this.$router.push({name: 'languages', params: {section: 'list'}})
                 } else {
                     this.warnings.push(response.data)
                 }
@@ -53,7 +48,6 @@ export default {
         setInputField(event, field) {
             let value = event.target.value
 
-            if (field === 'language_id') value = Number(value)
             if (field === 'is_visible') value = event.target.checked
 
             this.bodyData[field] = value
@@ -66,7 +60,8 @@ export default {
     <div class="container bg-secondary rounded border pl-3 pr-3 pt-2 pb-2 mb-3">
         <div class="row">
             <div class="col d-flex align-items-center justify-content-between">
-                <h4 class="mb-0 text-white d-inline">Добавление материка</h4>
+                <h4 class="mb-0 text-white d-inline">Добавление языка</h4>
+                <!-- <button class="btn btn-primary">Добавить</button> -->
             </div>
         </div>
     </div>
@@ -74,32 +69,19 @@ export default {
         <form class="row g-3 needs-validation" novalidate @submit.prevent="submitForm()">
             <div class="row mb-3">
                 <div class="col">
-                    <label for="valid-Lang" class="form-label">Язык*</label>
-                    <select name="language_id" @change="setInputField($event, 'language_id')" class="form-select" id="valid-Lang" required>
-                        <template v-if="languages">
-                            <option 
-                                v-for="lang in languages" 
-                                :value="lang.Id"
-                                :selected="(lang.Id == currentLanguageId) ? true : null"
-                            >
-                                {{ lang.Name }}
-                            </option>
-                        </template>
-                        <template v-else>
-                            <option value="0">Пусто</option>
-                        </template>
-                    </select>
+                    <label for="valid-Name" class="form-label">Название*</label>
+                    <input type="text" @keyup="setInputField($event, 'name')" name="name" class="form-control" id="valid-Name" required>
                     <div class="invalid-feedback">
-                        Выберите Язык записи
+                        Заполните Название языка
                     </div>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    <label for="valid-Name" class="form-label">Название*</label>
-                    <input type="text" @keyup="setInputField($event, 'name')" name="name" class="form-control" id="valid-Name" required>
+                    <label for="valid-Code" class="form-label">Код языка*</label>
+                    <input type="text" @keyup="setInputField($event, 'lang_code')" name="lang_code" class="form-control" id="valid-Code" maxlength="2" required>
                     <div class="invalid-feedback">
-                        Заполните Название материка
+                        Заполните Код языка
                     </div>
                 </div>
             </div>

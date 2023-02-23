@@ -13,7 +13,6 @@ import (
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
 	"attrtour/core"
-	// "attrtour/app/models"
 )
 
 type AuthService struct {
@@ -103,6 +102,17 @@ func (as *AuthService) Login(_dto dto.AuthDto) {
 	}
 }
 
+func (as *AuthService) Logout(_auth []string) {
+	var auth models.Auth
+
+	split := strings.Split(_auth[0], " ")
+	tokenString := split[1]
+
+	as.DBLink.Where("access_token = ?", tokenString).Delete(&auth)
+
+	as.Wri.WriteHeader(http.StatusOK)
+}
+
 func (as *AuthService) VerifyToken(_auth []string) {
 	var auth models.Auth
 
@@ -143,6 +153,25 @@ func (as *AuthService) IsVerifyToken(tokenString string) (bool, *jwt.Token) {
 		fmt.Println(err)
 		return false, token
 	}
+}
+
+func (as *AuthService) GetClaims(tokenString string) (jwt.MapClaims, bool) {
+	env := core.Helpers{}
+
+	var signedKey interface{} = []byte(env.Env("APP_JWT_SECRET"))
+
+	token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return signedKey, nil
+	})
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+
+	return claims, ok
 }
 
 func (as *AuthService) CreatePairTokens(id uint, secret string) (string, string) {

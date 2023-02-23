@@ -1,4 +1,5 @@
 <script>
+import { ref, inject } from 'vue'
 import axios from 'axios'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
@@ -7,19 +8,33 @@ import { ReqUrls } from '@/requstes'
 export default {
     setup() {
         const inputRefs = ref([])
+        const onRemoveClick = inject('requestRemove')
+        const formatDate = inject('formatDate')
 
         return {
-            formatDate: inject('formatDate'),
-            inputRefs
+            formatDate,
+            inputRefs,
+            onRemoveClick
         }
     },
     mounted() {
-        this.loadData()
+        const currentLanguageId = Number(this.$router.currentRoute.value.query.lang)
+        this.languages = inject('loadLanguages')()
+        this.languages.then(r => {
+            this.languages = r
+
+            if (currentLanguageId) this.currentLanguageId = currentLanguageId
+            else  this.currentLanguageId = r[0].Id
+
+            this.loadData()
+        })
     },
     data() {
         return {
             isLoading: false,
-            bodyData: []
+            bodyData: [],
+            currentLanguageId: 0,
+            languages: null,
         }
     },
     watch: {
@@ -36,16 +51,29 @@ export default {
         async loadData() {
             this.isLoading = true
 
-            const response = await axios.get('http://localhost:9000'+ReqUrls.location.get)
+            const response = await axios.get('http://localhost:9000'+ReqUrls.location.get, {
+                params: {
+                    language_id: this.currentLanguageId,
+                    full: true
+                }
+            })
             
             setTimeout(() => {
                 this.isLoading = false
             }, 500)
 
             if (response.status === 200) {
-                this.bodyData = response.data
+                this.bodyData = response.data.list
             }
         },
+        changeLanguage(event) {
+            const language_id = Number(event.target.value)
+
+            if (language_id) {
+                this.currentLanguageId = language_id
+                this.loadData()
+            }
+        }
     }
 }
 </script>
@@ -55,7 +83,32 @@ export default {
         <div class="row">
             <div class="col d-flex align-items-center justify-content-between">
                 <h4 class="mb-0 text-white d-inline">Места</h4>
-                <button class="btn btn-primary">Добавить</button>
+                
+                <div class="d-flex">
+                    <select 
+                        name="lang" 
+                        class="form-select"
+                        @change="changeLanguage($event)"
+                    >
+                        <option 
+                            v-for="lang in languages" 
+                            :value="lang.Id"
+                            :selected="(lang.Id == currentLanguageId) ? true : null"
+                        >
+                            {{ lang.Name }}
+                        </option>
+                    </select>
+                    <router-link 
+                        :to="{
+                            name: 'locations', 
+                            params: { section: 'add' },
+                            query: { lang: currentLanguageId }
+                        }"
+                        style="margin-left: 1rem;"
+                    >
+                        <button class="btn btn-primary">Добавить</button>
+                    </router-link>
+                </div>
             </div>
         </div>
     </div>
@@ -74,7 +127,6 @@ export default {
                     <th scope="col">Город</th>
                     <th scope="col" style="text-align: center;">Видимость</th>
                     <th scope="col" style="text-align: center;">Архив</th>
-                    <!-- <th scope="col">Автор</th> -->
                     <th scope="col">Дата Изменения</th>
                     <th scope="col">Дата создания</th>
                     <th></th>
@@ -108,17 +160,32 @@ export default {
                             />
                         </div>
                     </td>
-                    <!-- <td scope="col">{{ item.User.Username }}</td> -->
                     <td scope="col">{{ formatDate(item.UpdatedAt) }}</td>
                     <td scope="col">{{ formatDate(item.CreatedAt) }}</td>
-                    <td align="center">
-                        <i class="bi bi-pencil-fill"></i> - 
-                        <i class="bi bi-trash3-fill"></i>
+                    <td scope="col" align="center">
+                        <div class="d-flex justify-content-evenly">
+                            <router-link 
+                                :to="{
+                                    name: 'locations', 
+                                    params: { section: 'edit', id: item.Id }
+                                }"
+                                title="Редактировать"
+                            >
+                                <i class="bi bi-pencil-fill link-secondary"></i>
+                            </router-link>
+                            <div 
+                                to="#"
+                                title="Удалить"
+                                @click="onRemoveClick('location', item.Id)"
+                            >
+                                <i class="bi bi-trash3-fill link-secondary"></i>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <nav aria-label="Page navigation example">
+        <!-- <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-end">
                 <li class="page-item">
                     <a class="page-link" href="#" aria-label="Previous">
@@ -134,6 +201,6 @@ export default {
                     </a>
                 </li>
             </ul>
-        </nav>
+        </nav> -->
     </div>
 </template>

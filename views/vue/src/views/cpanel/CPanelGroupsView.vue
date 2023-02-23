@@ -1,20 +1,20 @@
 <script>
 import Sidebar from '@/components/inc/Sidebar.vue'
-import ListLocations from '@/components/modules/locations/List.vue'
-import AddLocations from '@/components/modules/locations/Add.vue'
-import EditLocations from '@/components/modules/locations/Edit.vue'
+import ListGroups from '@/components/modules/groups/List.vue'
+import AddGroups from '@/components/modules/groups/Add.vue'
+import EditGroups from '@/components/modules/groups/Edit.vue'
 
 import { useModulesStore } from '@/stores/modules'
 
 export default {
     components: {
         Sidebar,
-        ListLocations,
-        AddLocations,
-        EditLocations,
+        ListGroups,
+        AddGroups,
+        EditGroups,
     },
     mounted() {
-        this.storeModules.setModuleActive('locations')
+        this.storeModules.setModuleActive('groups')
     },
     setup() {
         const storeModules = useModulesStore()
@@ -31,17 +31,17 @@ export default {
     <div class="container-xl mt-3">
         <div class="row">
             <div class="col col-3">
-                <Sidebar module="locations" />
+                <Sidebar />
             </div>
             <div class="col">
                 <template v-if="$route.params.section == 'list'">
-                    <ListLocations />
+                    <ListGroups />
                 </template>
                 <template v-else-if="$route.params.section == 'add'">
-                    <AddLocations />
+                    <AddGroups />
                 </template>
                 <template v-else-if="$route.params.section == 'edit'">
-                    <EditLocations />
+                    <EditGroups />
                 </template>
             </div>
         </div>

@@ -2,7 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"strconv"
+	"strings"
 
 	"attrtour/app/http/dto"
 	"attrtour/app/services"
@@ -37,6 +40,16 @@ func (lc *LocationController) Add() {
 	ls := services.LocationService{}
 	ls.RequestInit(lc.DBLink, lc.Wri, lc.Req)
 
+	as := services.AuthService{}
+	authToken := lc.Req.Header["Authorization"]
+	split := strings.Split(authToken[0], " ")
+	claims, ok := as.GetClaims(split[1])
+
+	if ok {
+		convUint, _ := strconv.ParseUint(fmt.Sprintf("%v", claims["user_id"]), 10, 64)
+		dtoData.UserId = uint(convUint)
+	}
+
 	ls.Create(dtoData)
 }
 
@@ -47,6 +60,16 @@ func (lc *LocationController) Save() {
 
 	ls := services.LocationService{}
 	ls.RequestInit(lc.DBLink, lc.Wri, lc.Req)
+
+	as := services.AuthService{}
+	authToken := lc.Req.Header["Authorization"]
+	split := strings.Split(authToken[0], " ")
+	claims, ok := as.GetClaims(split[1])
+
+	if ok {
+		convUint, _ := strconv.ParseUint(fmt.Sprintf("%v", claims["user_id"]), 10, 64)
+		dtoData.UserId = uint(convUint)
+	}
 
 	ls.Save(dtoData)
 }

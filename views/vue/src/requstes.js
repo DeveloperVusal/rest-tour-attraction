@@ -1,6 +1,7 @@
 export const ReqUrls = {
     account: {
         auth: '/api/account/auth',
+        exit: '/api/account/logout',
         auth_verify: '/api/account/auth_verify',
         refresh: '/api/account/refresh',
     },

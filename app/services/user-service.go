@@ -3,8 +3,10 @@ package services
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
@@ -23,10 +25,22 @@ func (us *UserService) Init() {
 
 func (us *UserService) GetAll() {
 	var user []models.User
+	var res *gorm.DB
 
 	us.DBLink.Preload("Group").Find(&user)
 
-	jsonData, _ := json.Marshal(user)
+	getFull, _ := strconv.ParseBool(us.Req.FormValue("full"))
+
+	if getFull {
+		res = us.DBLink.Preload("Group").Find(&user)
+	} else {
+		res = us.DBLink.Preload("Group").Find(&user, "is_archive = ? AND is_blocked = ? AND is_confirm = ?", false, false, true)
+	}
+
+	jsonData, _ := json.Marshal(map[string]interface{}{
+		"count": res.RowsAffected,
+		"list":  user,
+	})
 
 	us.Wri.Write(jsonData)
 }
@@ -217,11 +231,12 @@ func (us *UserService) createRootGroup() uint {
 func (us *UserService) createRootUser(groupId uint) {
 	env := core.Helpers{}
 
+	hashPasswd, _ := us.HashPassword(env.Env("APP_ROOT_PASSWD"))
 	isConfirm := true
 	user := models.User{
 		GroupId:   groupId,
 		Username:  env.Env("APP_ROOT_LOGIN"),
-		Password:  env.Env("APP_ROOT_PASSWD"),
+		Password:  hashPasswd,
 		IsConfirm: &isConfirm,
 	}
 	us.DBLink.Save(&user)

@@ -7,28 +7,22 @@ import { ReqUrls } from '@/requstes'
 
 export default {
     mounted() {
-        this.languages = inject('loadLanguages')()
-        this.languages.then(r => this.languages = r)
-
         this.loadData()
         inject('initValidateForms')()
     },
     data() {
         return {
             itemId: Number(this.$router.currentRoute.value.params.id),
-            languages: null,
             isLoading: false,
             renderIsLoading: false,
             sendBodyData: {
                 id: 0, 
                 name: '',
-                language_id: 0,
-                is_archive: false,
                 is_visible: false,
+                is_archive: false,
             },
             renderBodyData: {
                 Name: '',
-                LanguageId: 0,
                 IsArchive: false,
                 IsVisible: false,
             },
@@ -39,7 +33,7 @@ export default {
         async loadData() {
             this.renderIsLoading = true
             
-            const response = await axios.get('http://localhost:9000'+ReqUrls.continent.get+'/'+this.itemId)
+            const response = await axios.get('http://localhost:9000'+ReqUrls.group.get+'/'+this.itemId)
             
             setTimeout(() => {
                 this.renderIsLoading = false
@@ -49,7 +43,6 @@ export default {
                 this.renderBodyData = response.data
 
                 this.sendBodyData.name = response.data.Name
-                this.sendBodyData.language_id = response.data.LanguageId
                 this.sendBodyData.is_visible = response.data.IsVisible
                 this.sendBodyData.is_archive = response.data.IsArchive
             }
@@ -59,7 +52,7 @@ export default {
             this.warnings = []
             this.sendBodyData.id = this.itemId
 
-            const response = await axios.patch('http://localhost:9000'+ReqUrls.continent.update, this.sendBodyData)
+            const response = await axios.patch('http://localhost:9000'+ReqUrls.group.update, this.sendBodyData)
             
             setTimeout(() => {
                 this.isLoading = false
@@ -67,7 +60,7 @@ export default {
 
             if (response.status === 200) {
                 if (response.data.status == 'success') {
-                    this.$router.push({name: 'continents', params: {section: 'list'}, query: {lang: this.sendBodyData.language_id}})
+                    this.$router.push({name: 'groups', params: {section: 'list'}})
                 } else {
                     this.warnings.push(response.data)
                 }
@@ -77,8 +70,7 @@ export default {
         },
         setInputField(event, field) {
             let value = event.target.value
-
-            if (field === 'language_id') value = Number(value)
+            
             if (
                 field === 'is_visible' ||
                 field === 'is_archive'
@@ -94,41 +86,19 @@ export default {
     <div class="container bg-secondary rounded border pl-3 pr-3 pt-2 pb-2 mb-3">
         <div class="row">
             <div class="col d-flex align-items-center justify-content-between">
-                <h4 class="mb-0 text-white d-inline">Сохранение материка</h4>
+                <h4 class="mb-0 text-white d-inline">Редактирование групы</h4>
             </div>
         </div>
     </div>
     <div class="container bg-white rounded border pt-4 p-3">
         <template v-if="!renderIsLoading">
-            <form class="row g-3 needs-validation" novalidate @submit.prevent="submitForm($event.target)">
-                <div class="row mb-3">
-                    <div class="col">
-                        <label for="valid-Lang" class="form-label">Язык*</label>
-                        <select name="language_id" @change="setInputField($event, 'language_id')" class="form-select" id="valid-Lang" required>
-                            <template v-if="languages">
-                                <option 
-                                    v-for="lang in languages" 
-                                    :value="lang.Id"
-                                    :selected="(lang.Id == renderBodyData.LanguageId) ? true : null"
-                                >
-                                    {{ lang.Name }}
-                                </option>
-                            </template>
-                            <template v-else>
-                                <option value="0">Пусто</option>
-                            </template>
-                        </select>
-                        <div class="invalid-feedback">
-                            Выберите Язык записи
-                        </div>
-                    </div>
-                </div>
+            <form class="row g-3 needs-validation" novalidate @submit.prevent="submitForm()">
                 <div class="row mb-3">
                     <div class="col">
                         <label for="valid-Name" class="form-label">Название*</label>
-                        <input type="text" :value="renderBodyData.Name" @keyup="setInputField($event, 'name')" name="name" class="form-control" id="valid-Name" required>
+                        <input type="text" @keyup="setInputField($event, 'name')" :value="renderBodyData.Name" name="name" class="form-control" id="valid-Name" required>
                         <div class="invalid-feedback">
-                            Заполните Название материка
+                            Заполните Название группы
                         </div>
                     </div>
                 </div>

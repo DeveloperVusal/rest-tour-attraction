@@ -3,11 +3,13 @@ package services
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
 	"attrtour/core"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -18,10 +20,21 @@ type LocationService struct {
 
 func (ls *LocationService) GetAll() {
 	var location []models.Location
+	var res *gorm.DB
 
-	ls.DBLink.Preload(clause.Associations).Find(&location)
+	getLangId := ls.Req.FormValue("language_id")
+	getFull, _ := strconv.ParseBool(ls.Req.FormValue("full"))
 
-	jsonData, _ := json.Marshal(location)
+	if getFull {
+		res = ls.DBLink.Preload(clause.Associations).Find(&location, "language_id = ?", getLangId)
+	} else {
+		res = ls.DBLink.Preload(clause.Associations).Find(&location, "language_id = ? AND is_visible = ? AND is_archive = ?", getLangId, true, false)
+	}
+
+	jsonData, _ := json.Marshal(map[string]interface{}{
+		"count": res.RowsAffected,
+		"list":  location,
+	})
 
 	ls.Wri.Write(jsonData)
 }

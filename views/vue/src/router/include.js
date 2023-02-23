@@ -4,6 +4,7 @@ import CPanelUsersView from '@/views/cpanel/CPanelUsersView.vue'
 import CPanelContinentsView from '@/views/cpanel/CPanelContinentsView.vue'
 import CPanelCountriesView from '@/views/cpanel/CPanelCountriesView.vue'
 import CPanelLanguagesView from '@/views/cpanel/CPanelLanguagesView.vue'
+import CPanelGroupsView from '@/views/cpanel/CPanelGroupsView.vue'
 
 const Routes = [
     {
@@ -44,6 +45,11 @@ const Routes = [
                 path: 'languages/:section/:id?',
                 name: 'languages',
                 component: CPanelLanguagesView
+            },
+            {
+                path: 'groups/:section/:id?',
+                name: 'groups',
+                component: CPanelGroupsView
             },
         ]
     },

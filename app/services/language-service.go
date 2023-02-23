@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
@@ -17,7 +18,13 @@ type LanguageService struct {
 func (ls *LanguageService) GetAll() {
 	var language []models.Language
 
-	ls.DBLink.Find(&language)
+	getFull, _ := strconv.ParseBool(ls.Req.FormValue("full"))
+
+	if getFull {
+		ls.DBLink.Find(&language)
+	} else {
+		ls.DBLink.Find(&language, "is_visible = ? AND is_archive = ?", true, false)
+	}
 
 	jsonData, _ := json.Marshal(language)
 

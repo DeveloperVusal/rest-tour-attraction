@@ -24,7 +24,7 @@ type SaveUserDto struct {
 	Id          uint   `json:"id" validate:"required,numeric"`
 	GroupId     uint   `json:"group_id" validate:"required,numeric"`
 	Username    string `json:"username" validate:"required,alphanum"`
-	Password    string `json:"password" validate:"required,contains"`
+	Password    string `json:"password" validate:"omitempty,contains"`
 	Email       string `json:"email" validate:"omitempty,email"`
 	Name        string `json:"name" validate:"omitempty,alphaunicode"`
 	Surname     string `json:"surname" validate:"omitempty,alphaunicode"`

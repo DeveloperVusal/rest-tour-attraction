@@ -16,23 +16,12 @@ export default {
         }
     },
     mounted() {
-        const currentLanguageId = Number(this.$router.currentRoute.value.query.lang)
-        this.languages = inject('loadLanguages')()
-        this.languages.then(r => {
-            this.languages = r
-
-            if (currentLanguageId) this.currentLanguageId = currentLanguageId
-            else  this.currentLanguageId = r[0].Id
-
-            this.loadData()
-        })
+        this.loadData()
     },
     data() {
         return {
             isLoading: false,
-            bodyData: null,
-            currentLanguageId: 0,
-            languages: null,
+            bodyData: []
         }
     },
     watch: {
@@ -49,9 +38,8 @@ export default {
         async loadData() {
             this.isLoading = true
 
-            const response = await axios.get('http://localhost:9000'+ReqUrls.continent.get, {
+            const response = await axios.get('http://localhost:9000'+ReqUrls.group.get, {
                 params: {
-                    language_id: this.currentLanguageId,
                     full: true
                 }
             })
@@ -61,17 +49,9 @@ export default {
             }, 500)
 
             if (response.status === 200) {
-                this.bodyData = response.data.list
+                this.bodyData = response.data
             }
         },
-        changeLanguage(event) {
-            const language_id = Number(event.target.value)
-
-            if (language_id) {
-                this.currentLanguageId = language_id
-                this.loadData()
-            }
-        }
     }
 }
 </script>
@@ -80,27 +60,12 @@ export default {
     <div class="container bg-secondary rounded border pl-3 pr-3 pt-2 pb-2 mb-3">
         <div class="row">
             <div class="col d-flex align-items-center justify-content-between">
-                <h4 class="mb-0 text-white d-inline">Материки</h4>
-
+                <h4 class="mb-0 text-white d-inline">Группы</h4>
                 <div class="d-flex">
-                    <select 
-                        name="lang" 
-                        class="form-select"
-                        @change="changeLanguage($event)"
-                    >
-                        <option 
-                            v-for="lang in languages" 
-                            :value="lang.Id"
-                            :selected="(lang.Id == currentLanguageId) ? true : null"
-                        >
-                            {{ lang.Name }}
-                        </option>
-                    </select>
                     <router-link 
                         :to="{
-                            name: 'continents', 
-                            params: { section: 'add' },
-                            query: { lang: currentLanguageId }
+                            name: 'groups', 
+                            params: { section: 'add' }
                         }"
                         style="margin-left: 1rem;"
                     >
@@ -135,7 +100,7 @@ export default {
                             <input 
                                 class="form-check-input" 
                                 type="checkbox" 
-                                :checked="(item.IsVisible) ? true : null"
+                                :checked="(item.IsVisible) ? true : null" 
                                 disabled 
                                 ref="inputRefs"
                             />
@@ -146,7 +111,7 @@ export default {
                             <input 
                                 class="form-check-input" 
                                 type="checkbox" 
-                                :checked="(item.IsArchive) ? true : null"
+                                :checked="(item.IsArchive) ? true : null" 
                                 disabled 
                                 ref="inputRefs"
                             />
@@ -156,7 +121,7 @@ export default {
                         <div class="d-flex justify-content-evenly">
                             <router-link 
                                 :to="{
-                                    name: 'continents', 
+                                    name: 'groups', 
                                     params: { section: 'edit', id: item.Id }
                                 }"
                                 title="Редактировать"
@@ -166,7 +131,7 @@ export default {
                             <div 
                                 to="#"
                                 title="Удалить"
-                                @click="onRemoveClick('continent', item.Id)"
+                                @click="onRemoveClick('group', item.Id)"
                             >
                                 <i class="bi bi-trash3-fill link-secondary"></i>
                             </div>

@@ -14,7 +14,6 @@ type ContinentController core.BaseController
 func (cc *ContinentController) Get() {
 	cs := services.ContinentService{}
 	cs.RequestInit(cc.DBLink, cc.Wri, cc.Req)
-
 	cs.GetAll()
 }
 

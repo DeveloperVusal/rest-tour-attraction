@@ -3,10 +3,13 @@ package services
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
 	"attrtour/core"
+
+	"gorm.io/gorm"
 )
 
 type ContinentService struct {
@@ -16,10 +19,21 @@ type ContinentService struct {
 
 func (cs *ContinentService) GetAll() {
 	var continent []models.Continent
+	var res *gorm.DB
 
-	cs.DBLink.Preload("Language").Find(&continent)
+	getLangId := cs.Req.FormValue("language_id")
+	getFull, _ := strconv.ParseBool(cs.Req.FormValue("full"))
 
-	jsonData, _ := json.Marshal(continent)
+	if getFull {
+		res = cs.DBLink.Preload("Language").Find(&continent, "language_id = ?", getLangId)
+	} else {
+		res = cs.DBLink.Preload("Language").Find(&continent, "language_id = ? AND is_visible = ? AND is_archive = ?", getLangId, true, false)
+	}
+
+	jsonData, _ := json.Marshal(map[string]interface{}{
+		"count": res.RowsAffected,
+		"list":  continent,
+	})
 
 	cs.Wri.Write(jsonData)
 }

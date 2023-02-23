@@ -1,5 +1,5 @@
 <script>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import axios from 'axios'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
@@ -8,9 +8,11 @@ import { ReqUrls } from '@/requstes'
 export default {
     setup() {
         const inputRefs = ref([])
+        const onRemoveClick = inject('requestRemove')
 
         return {
-            inputRefs
+            inputRefs,
+            onRemoveClick
         }
     },
     mounted() {
@@ -36,7 +38,11 @@ export default {
         async loadData() {
             this.isLoading = true
 
-            const response = await axios.get('http://localhost:9000'+ReqUrls.language.get)
+            const response = await axios.get('http://localhost:9000'+ReqUrls.language.get, {
+                params: {
+                    full: true
+                }
+            })
             
             setTimeout(() => {
                 this.isLoading = false
@@ -54,8 +60,18 @@ export default {
     <div class="container bg-secondary rounded border pl-3 pr-3 pt-2 pb-2 mb-3">
         <div class="row">
             <div class="col d-flex align-items-center justify-content-between">
-                <h4 class="mb-0 text-white d-inline">Страны</h4>
-                <button class="btn btn-primary">Добавить</button>
+                <h4 class="mb-0 text-white d-inline">Языки</h4>
+                <div class="d-flex">
+                    <router-link 
+                        :to="{
+                            name: 'languages', 
+                            params: { section: 'add' }
+                        }"
+                        style="margin-left: 1rem;"
+                    >
+                        <button class="btn btn-primary">Добавить</button>
+                    </router-link>
+                </div>
             </div>
         </div>
     </div>
@@ -101,14 +117,30 @@ export default {
                             />
                         </div>
                     </td>
-                    <td  align="center">
-                        <i class="bi bi-pencil-fill"></i> - 
-                        <i class="bi bi-trash3-fill"></i>
+                    <td scope="col" align="center">
+                        <div class="d-flex justify-content-evenly">
+                            <router-link 
+                                :to="{
+                                    name: 'languages', 
+                                    params: { section: 'edit', id: item.Id }
+                                }"
+                                title="Редактировать"
+                            >
+                                <i class="bi bi-pencil-fill link-secondary"></i>
+                            </router-link>
+                            <div 
+                                to="#"
+                                title="Удалить"
+                                @click="onRemoveClick('language', item.Id)"
+                            >
+                                <i class="bi bi-trash3-fill link-secondary"></i>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <nav aria-label="Page navigation example">
+        <!-- <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-end">
                 <li class="page-item">
                     <a class="page-link" href="#" aria-label="Previous">
@@ -124,6 +156,6 @@ export default {
                     </a>
                 </li>
             </ul>
-        </nav>
+        </nav> -->
     </div>
 </template>

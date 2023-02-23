@@ -3,10 +3,13 @@ package services
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"attrtour/app/http/dto"
 	"attrtour/app/models"
 	"attrtour/core"
+
+	"gorm.io/gorm"
 )
 
 type GroupService struct {
@@ -16,10 +19,20 @@ type GroupService struct {
 
 func (gs *GroupService) GetAll() {
 	var group []models.Group
+	var res *gorm.DB
 
-	gs.DBLink.Find(&group)
+	getFull, _ := strconv.ParseBool(gs.Req.FormValue("full"))
 
-	jsonData, _ := json.Marshal(group)
+	if getFull {
+		res = gs.DBLink.Find(&group)
+	} else {
+		res = gs.DBLink.Find(&group, "is_visible = ? AND is_archive = ?", true, false)
+	}
+
+	jsonData, _ := json.Marshal(map[string]interface{}{
+		"count": res.RowsAffected,
+		"list":  group,
+	})
 
 	gs.Wri.Write(jsonData)
 }

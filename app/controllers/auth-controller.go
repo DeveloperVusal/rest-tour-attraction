@@ -21,6 +21,12 @@ func (ac *AuthController) Login() {
 	as.Login(dtoData)
 
 }
+func (ac *AuthController) Logout() {
+	as := services.AuthService{}
+	as.RequestInit(ac.DBLink, ac.Wri, ac.Req)
+
+	as.Logout(ac.Req.Header["Authorization"])
+}
 func (ac *AuthController) VerifyToken() {
 	as := services.AuthService{}
 	as.RequestInit(ac.DBLink, ac.Wri, ac.Req)
@@ -37,8 +43,4 @@ func (ac *AuthController) Refresh() {
 
 		as.Refresh(token)
 	}
-}
-
-func (ac *AuthController) Logout() {
-
 }

@@ -1,11 +1,14 @@
 <script>
+import { inject } from 'vue'
 import { useModulesStore } from '@/stores/modules'
 
 export default {
     setup() {
+        const exitAccount = inject('exitAccount')
         const storeModules = useModulesStore()
 
         return {
+            exitAccount,
             storeModules
         }
     },
@@ -35,8 +38,12 @@ export default {
                 {{ item.name }}
             </router-link>
         </template>
-        <a href="#" class="list-group-item list-group-item-action text-danger">
+        <div 
+            @click="exitAccount" 
+            class="list-group-item list-group-item-action text-danger"
+            style="cursor: pointer;"
+        >
             Выйти
-        </a>
+        </div>
     </div>
 </template>

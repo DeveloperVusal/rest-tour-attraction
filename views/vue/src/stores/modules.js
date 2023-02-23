@@ -9,8 +9,9 @@ export const useModulesStore = defineStore('modules', () => {
         locations: {name: 'Места', path: '/locations', active: true},
         countries: {name: 'Страны', path: '/countries', active: false},
         continents: {name: 'Материки', path: '/continents', active: false},
-        users: {name: 'Пользователи', path: '/users', active: false},
         languages: {name: 'Языки', path: '/languages', active: false},
+        groups: {name: 'Группы', path: '/groups', active: false},
+        users: {name: 'Пользователи', path: '/users', active: false},
     }
     const getList = computed(() => list.value)
 

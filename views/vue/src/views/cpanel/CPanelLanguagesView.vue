@@ -1,6 +1,8 @@
 <script>
-import ListLanguages from '@/components/modules/languages/List.vue'
 import Sidebar from '@/components/inc/Sidebar.vue'
+import ListLanguages from '@/components/modules/languages/List.vue'
+import AddLanguages from '@/components/modules/languages/Add.vue'
+import EditLanguages from '@/components/modules/languages/Edit.vue'
 
 import { useModulesStore } from '@/stores/modules'
 
@@ -8,6 +10,8 @@ export default {
     components: {
         Sidebar,
         ListLanguages,
+        AddLanguages,
+        EditLanguages
     },
     mounted() {
         this.storeModules.setModuleActive('languages')
@@ -33,12 +37,12 @@ export default {
                 <template v-if="$route.params.section == 'list'">
                     <ListLanguages />
                 </template>
-                <!-- <template v-else-if="$route.params.section == 'add'">
+                <template v-else-if="$route.params.section == 'add'">
                     <AddLanguages />
                 </template>
-                <template v-else-if="$route.params.section == 'save'">
-                    <SaveLanguages />
-                </template> -->
+                <template v-else-if="$route.params.section == 'edit'">
+                    <EditLanguages />
+                </template>
             </div>
         </div>
     </div>

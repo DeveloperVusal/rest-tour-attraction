@@ -10,11 +10,69 @@ import { ReqUrls } from '@/requstes'
 
 export default {
     setup() {
+        const parseJwt = function (token) {
+            let base64Url = token.split('.')[1];
+            let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        }
+        const getUserInfo = async function () {
+            const refresh = localStorage.getItem('refresh_token')
+
+            if (refresh) {
+                const jwt = parseJwt(refresh)
+                const response = await axios.get('http://localhost:9000'+ReqUrls.user.get+'/'+jwt.user_id)
+
+                if (response.status === 200) {
+                    return response.data
+                }
+            }
+
+            return false
+        }
         const loadLanguages = async function() {
             const response = await axios.get('http://localhost:9000'+ReqUrls.language.get)
 
             if (response.status === 200) {
                 return response.data
+            } else {
+                return false
+            }
+        }
+        const loadContinents = async function(lang_id) {
+            const response = await axios.get('http://localhost:9000'+ReqUrls.continent.get, {
+                params: {
+                    language_id: lang_id
+                }
+            })
+
+            if (response.status === 200) {
+                return response.data.list
+            } else {
+                return false
+            }
+        }
+        const loadCountries = async function(lang_id) {
+            const response = await axios.get('http://localhost:9000'+ReqUrls.country.get, {
+                params: {
+                    language_id: lang_id
+                }
+            })
+
+            if (response.status === 200) {
+                return response.data.list
+            } else {
+                return false
+            }
+        }
+        const loadGroups = async function() {
+            const response = await axios.get('http://localhost:9000'+ReqUrls.group.get)
+
+            if (response.status === 200) {
+                return response.data.list
             } else {
                 return false
             }
@@ -64,11 +122,28 @@ export default {
                 }
             }
         }
+        const exitAccount = async function() {
+            const response = await $api.post(ReqUrls.account.exit)
+                
+            // Если все успешно
+            if (response.status === 200) {
+                cookie.remove('access_token')
+                localStorage.removeItem('refresh_token')
+                window.location.reload()
+            }
+        }
 
+        provide('parseJwt', parseJwt)
         provide('requestRemove', requestRemove)
-        provide('loadLanguages', loadLanguages)
         provide('formatDate', formatDate)
         provide('initValidateForms', initValidateForms)
+        
+        provide('loadLanguages', loadLanguages)
+        provide('loadContinents', loadContinents)
+        provide('loadCountries', loadCountries)
+        provide('loadGroups', loadGroups)
+        provide('getUserInfo', getUserInfo)
+        provide('exitAccount', exitAccount)
 
         const storeModules = useModulesStore()
 

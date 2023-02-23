@@ -6,29 +6,41 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import { ReqUrls } from '@/requstes'
 
 export default {
-    mounted() {
-        this.languages = inject('loadLanguages')()
-        this.languages.then(r => this.languages = r)
+    setup() {
+        const loadContinents = inject('loadContinents')
 
-        this.loadData()
+        return {
+            loadContinents
+        }
+    },
+    mounted() {
+        inject('loadLanguages')().then(r => this.languages = r)
+
+        this.loadData(() => {
+            this.loadContinents(this.sendBodyData.language_id).then(r => this.continents = r)
+        })
+        
         inject('initValidateForms')()
     },
     data() {
         return {
             itemId: Number(this.$router.currentRoute.value.params.id),
             languages: null,
+            continents: null,
             isLoading: false,
             renderIsLoading: false,
             sendBodyData: {
                 id: 0, 
                 name: '',
                 language_id: 0,
+                continent_id: 0,
                 is_archive: false,
                 is_visible: false,
             },
             renderBodyData: {
                 Name: '',
                 LanguageId: 0,
+                ContinentId: 0,
                 IsArchive: false,
                 IsVisible: false,
             },
@@ -36,10 +48,10 @@ export default {
         }
     },
     methods: {
-        async loadData() {
+        async loadData(callback) {
             this.renderIsLoading = true
             
-            const response = await axios.get('http://localhost:9000'+ReqUrls.continent.get+'/'+this.itemId)
+            const response = await axios.get('http://localhost:9000'+ReqUrls.country.get+'/'+this.itemId)
             
             setTimeout(() => {
                 this.renderIsLoading = false
@@ -50,8 +62,11 @@ export default {
 
                 this.sendBodyData.name = response.data.Name
                 this.sendBodyData.language_id = response.data.LanguageId
+                this.sendBodyData.continent_id = response.data.ContinentId
                 this.sendBodyData.is_visible = response.data.IsVisible
                 this.sendBodyData.is_archive = response.data.IsArchive
+
+                callback()
             }
         },
         async submitForm() {
@@ -59,7 +74,7 @@ export default {
             this.warnings = []
             this.sendBodyData.id = this.itemId
 
-            const response = await axios.patch('http://localhost:9000'+ReqUrls.continent.update, this.sendBodyData)
+            const response = await axios.patch('http://localhost:9000'+ReqUrls.country.update, this.sendBodyData)
             
             setTimeout(() => {
                 this.isLoading = false
@@ -67,7 +82,7 @@ export default {
 
             if (response.status === 200) {
                 if (response.data.status == 'success') {
-                    this.$router.push({name: 'continents', params: {section: 'list'}, query: {lang: this.sendBodyData.language_id}})
+                    this.$router.push({name: 'countries', params: {section: 'list'}, query: {lang: this.sendBodyData.language_id}})
                 } else {
                     this.warnings.push(response.data)
                 }
@@ -78,7 +93,7 @@ export default {
         setInputField(event, field) {
             let value = event.target.value
 
-            if (field === 'language_id') value = Number(value)
+            if (field === 'language_id' || field === 'continent_id') value = Number(value)
             if (
                 field === 'is_visible' ||
                 field === 'is_archive'
@@ -94,7 +109,7 @@ export default {
     <div class="container bg-secondary rounded border pl-3 pr-3 pt-2 pb-2 mb-3">
         <div class="row">
             <div class="col d-flex align-items-center justify-content-between">
-                <h4 class="mb-0 text-white d-inline">Сохранение материка</h4>
+                <h4 class="mb-0 text-white d-inline">Сохранение страны</h4>
             </div>
         </div>
     </div>
@@ -125,10 +140,32 @@ export default {
                 </div>
                 <div class="row mb-3">
                     <div class="col">
+                        <label for="valid-Continent" class="form-label">Континент*</label>
+                        <select name="continent_id" @change="setInputField($event, 'continent_id')" class="form-select" id="valid-Continent" required>
+                            <template v-if="continents">
+                                <option 
+                                    v-for="continent in continents" 
+                                    :value="continent.Id"
+                                    :selected="(continent.Id == renderBodyData.ContinentId) ? true : null"
+                                >
+                                    {{ continent.Name }}
+                                </option>
+                            </template>
+                            <template v-else>
+                                <option value="0">Пусто</option>
+                            </template>
+                        </select>
+                        <div class="invalid-feedback">
+                            Выберите Континент
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
                         <label for="valid-Name" class="form-label">Название*</label>
                         <input type="text" :value="renderBodyData.Name" @keyup="setInputField($event, 'name')" name="name" class="form-control" id="valid-Name" required>
                         <div class="invalid-feedback">
-                            Заполните Название материка
+                            Заполните Название страны
                         </div>
                     </div>
                 </div>

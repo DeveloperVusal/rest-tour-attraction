@@ -481,6 +481,17 @@ func (api *Api) Run(wri http.ResponseWriter, req *http.Request) {
 		ac.Login()
 	})
 
+	// Logout
+	route.Post("/account/logout", func(args map[string]interface{}) {
+		ac := &controllers.AuthController{
+			Req:    req,
+			Wri:    wri,
+			DBLink: api.DBLink,
+		}
+
+		ac.Logout()
+	})
+
 	// Verify jwt
 	route.Get("/account/auth_verify", func(args map[string]interface{}) {
 		ac := &controllers.AuthController{

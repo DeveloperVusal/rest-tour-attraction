@@ -1,6 +1,8 @@
 <script>
-import ListUsers from '@/components/modules/users/List.vue'
 import Sidebar from '@/components/inc/Sidebar.vue'
+import ListUsers from '@/components/modules/users/List.vue'
+import AddUsers from '@/components/modules/users/Add.vue'
+import EditUsers from '@/components/modules/users/Edit.vue'
 
 import { useModulesStore } from '@/stores/modules'
 
@@ -8,6 +10,8 @@ export default {
     components: {
         Sidebar,
         ListUsers,
+        AddUsers,
+        EditUsers,
     },
     mounted() {
         this.storeModules.setModuleActive('users')
@@ -33,12 +37,12 @@ export default {
                 <template v-if="$route.params.section == 'list'">
                     <ListUsers />
                 </template>
-                <!-- <template v-else-if="$route.params.section == 'add'">
+                <template v-else-if="$route.params.section == 'add'">
                     <AddUsers />
                 </template>
-                <template v-else-if="$route.params.section == 'save'">
-                    <SaveUsers />
-                </template> -->
+                <template v-else-if="$route.params.section == 'edit'">
+                    <EditUsers />
+                </template>
             </div>
         </div>
     </div>
