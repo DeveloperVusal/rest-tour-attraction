@@ -70,6 +70,9 @@ func init() {
 }
 
 func main() {
+	env := core.Helpers{}
+	env.LoadEnv()
+
 	handler := httpCors.Handler(mux)
-	http.ListenAndServe(":9000", handler)
+	http.ListenAndServe(env.Env("SERVER_HOST")+":"+env.Env("SERVER_PORT"), handler)
 }
