@@ -48,7 +48,6 @@ func init() {
 	gormDB.AutoMigrate(models.Items...)
 
 	isFindRoute := false
-	web := routes.Web{}
 	api := routes.Api{
 		DBLink:      gormDB,
 		IsFindRoute: &isFindRoute,
@@ -57,11 +56,7 @@ func init() {
 	mux = http.NewServeMux()
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
 		api.Run(w, r)
-		if !*api.IsFindRoute {
-			web.Run(w, r)
-		}
 	})
 
 	httpCors = cors.New(cors.Options{
